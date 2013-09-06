@@ -27,10 +27,10 @@ LOCAL="127.0.0.1"
 # Usage:
 #	error
 #
-error() { 
-	echo "ERREUR : parametres invalides !" >&2 
-	echo "utilisez l'option -h pour en savoir plus" >&2 
-	exit 1 
+error() {
+	echo "ERREUR : parametres invalides !" >&2
+	echo "utilisez l'option -h pour en savoir plus" >&2
+	exit 1
 }
 
 # Role:
@@ -38,12 +38,13 @@ error() {
 # Usage:
 #	usage
 #
-usage() { 
-	echo "Usage: $0 option" 
+usage() {
+	echo "Usage: $0 [option]"
+	echo "Liste des options :"
 	echo "-h : afficher l'aide"
 	echo "consts : Valeur des constantes"
 	echo "install : installer Ansible"
-	echo "config : configurer Ansible" 
+	echo "config : configurer Ansible"
 }
 
 # Role:
@@ -68,12 +69,12 @@ value() {
 #	install
 #
 install() {
-	echo -n "* Début de l'installation...\n"
-	echo -n "* Installation des paquets : git python-pip python-jinja2 python-yaml python-paramiko\n"
-	sudo apt-get install git python-pip python-jinja2 python-yaml python-paramiko
-	echo -n "* Clonage du projet Ansible : github.com/ansible/ansible.git\n"
-	git clone git://github.com/ansible/ansible.git $DIRECTORY
-	echo -n "* Fin de l'installation\n"
+	echo "* Début de l'installation..."
+	echo "* Installation des paquets : git python-pip python-jinja2 python-yaml python-paramiko"
+#	sudo apt-get install git python-pip python-jinja2 python-yaml python-paramiko
+	echo "* Clonage du projet Ansible : github.com/ansible/ansible.git"
+#	git clone git://github.com/ansible/ansible.git $DIRECTORY
+	echo "* Fin de l'installation"
 }
 
 # Role:
@@ -82,47 +83,53 @@ install() {
 #	config
 #
 config() {
-	echo -n "* Début de la configuration...\n"
+	echo "* Début de la configuration..."
 	if [ -d "$DIRECTORY/ansible" ]
 	then
 		if [ ! -d "$PLAYBOOKS" ]
 		then
 			mkdir -p $PLAYBOOKS
 		else
-			echo -n "* Info : Le répertoire $PLAYBOOKS existe déjà !\n"
+			echo "* Info : Le répertoire $PLAYBOOKS existe déjà !"
 		fi
 		if [ ! -s "$HOSTS" ]
 		then
 			echo $LOCAL > $HOSTS
 		else
-			echo -n "* Info : Le fichier $HOSTS existe déjà !\n"
+			echo "* Info : Le fichier $HOSTS existe déjà !"
 		fi
-		echo -n "\nexport ANSIBLE_HOSTS=$HOSTS" >> $SOURCE
-		echo -n "\nsource ~/ansible/hacking/env-setup" >> /home/$USER/.bashrc
+		echo "# Chemin du fichier hosts" >> $SOURCE
+		echo "export ANSIBLE_HOSTS=$HOSTS" >> $SOURCE
+
+		echo "# Chargement de l'env Ansible au démarrage de la session" >> /home/$USER/.bashrc
+		echo "source ~/ansible/hacking/env-setup" >> /home/$USER/.bashrc
 
 		# Pour finaliser l'installation, l'utilisateur doit recharger .bashrc
-		echo -n "* Pour terminer la configuration : $ source ~/.bashrc\n"
+		echo "* Pour terminer la configuration : $ source ~/.bashrc"
 	else
-		echo -n "* Arrêt de la configuration : Ansible n'est pas installé !\n Usage : $0 install\n"
+		echo "* Arrêt de la configuration : Ansible n'est pas installé !"
+		echo "Usage : $0 install"
 		exit 1
 	fi
 }
 
-# Pas de paramètre 
-[[ $# -lt 1 ]] && error 
+# Pas de paramètre
+[[ $# -lt 1 ]] && error
 
 case "$1" in
 	consts) value
-			break;;
+		break;;
 
 	install) install
-			 break;;
+		 break;;
 
 	config) config
-			break;;
+		break;;
 
 	-h) usage
-		break;;
+	break;;
+
+	*) error ;;
 esac
 
 exit 0
