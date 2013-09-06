@@ -1,0 +1,7 @@
+ #Playbook qui permet d'installer un serveur web apache/php
+- hosts: all
+
+  tasks:
+   - name: Installation de la commande service
+     action: apt name=service state=installed
+     tags:   service
