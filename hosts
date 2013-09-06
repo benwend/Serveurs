@@ -11,3 +11,8 @@
 [web:children]
 awacs
 ovh
+
+# Base de données
+[bdd:children]
+awacs
+ovh

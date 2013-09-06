@@ -1,0 +1,12 @@
+#Playbook qui permet d'installer une base de données MySQL
+- hosts: bdd
+
+  tasks:
+    - name:   Installation du module PHP d'Apache2
+      action: apt name=mysql-server-5.5 state=installed
+      tags:   mysql5
+      notify: restart server web
+
+  handlers:
+    - name: restart server web
+      action: service name=apache state=restarted
