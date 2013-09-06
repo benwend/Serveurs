@@ -71,9 +71,9 @@ value() {
 install() {
 	echo "* Début de l'installation..."
 	echo "* Installation des paquets : git python-pip python-jinja2 python-yaml python-paramiko"
-#	sudo apt-get install git python-pip python-jinja2 python-yaml python-paramiko
+	sudo apt-get install git python-pip python-jinja2 python-yaml python-paramiko
 	echo "* Clonage du projet Ansible : github.com/ansible/ansible.git"
-#	git clone git://github.com/ansible/ansible.git $DIRECTORY
+	git clone git://github.com/ansible/ansible.git $DIRECTORY
 	echo "* Fin de l'installation"
 }
 
@@ -84,28 +84,26 @@ install() {
 #
 config() {
 	echo "* Début de la configuration..."
-	if [ -d "$DIRECTORY/ansible" ]
+	if [ -d "$ANSIBLE" ]
 	then
-		if [ ! -d "$PLAYBOOKS" ]
+		if [ -d "$MODULE" ]
 		then
-			mkdir -p $PLAYBOOKS
-		else
-			echo "* Info : Le répertoire $PLAYBOOKS existe déjà !"
-		fi
-		if [ ! -s "$HOSTS" ]
-		then
-			echo $LOCAL > $HOSTS
-		else
-			echo "* Info : Le fichier $HOSTS existe déjà !"
-		fi
-		echo "# Chemin du fichier hosts" >> $SOURCE
-		echo "export ANSIBLE_HOSTS=$HOSTS" >> $SOURCE
+			echo "* Clonage du projet Ansible : github.com/ansible/ansible.git"
+			git clone -o .ansible -b ansible git@github.com:benwend/serveurs.git $MODULE
+			ssh-add $DIRECTORY/.ssh/github.ppk
+			
+			echo "# Chemin du fichier hosts" >> $SOURCE
+			echo "export ANSIBLE_HOSTS=$HOSTS" >> $SOURCE
 
-		echo "# Chargement de l'env Ansible au démarrage de la session" >> /home/$USER/.bashrc
-		echo "source ~/ansible/hacking/env-setup" >> /home/$USER/.bashrc
+			echo "# Chargement de l'environnement Ansible au démarrage de la session" >> /home/$USER/.bashrc
+			echo "source ~/ansible/hacking/env-setup" >> /home/$USER/.bashrc
 
-		# Pour finaliser l'installation, l'utilisateur doit recharger .bashrc
-		echo "* Pour terminer la configuration : $ source ~/.bashrc"
+			# Pour finaliser l'installation, l'utilisateur doit recharger .bashrc
+			echo "* Pour terminer la configuration : $ source ~/.bashrc"
+		else
+			echo "* Arrêt de la configuration : .ansible a déjà été cloné !"
+			exit 1
+		fi
 	else
 		echo "* Arrêt de la configuration : Ansible n'est pas installé !"
 		echo "Usage : $0 install"
@@ -113,21 +111,34 @@ config() {
 	fi
 }
 
+gitconf() {
+	echo "* Configuration de git en cours..."
+	git config --global color.diff auto
+	git config --global color.status auto
+	git config --global color.branch auto
+	git config --global user.name "benwend"
+	git config --global user.email benjamin.wend+git@gmail.com
+}
+
 # Pas de paramètre
 [[ $# -lt 1 ]] && error
 
 case "$1" in
-	consts) value
+	consts)
+		value
 		break;;
 
-	install) install
-		 break;;
-
-	config) config
+	install)
+		install
 		break;;
 
-	-h) usage
-	break;;
+	config)
+		config
+		break;;
+
+	-h)
+		usage
+		break;;
 
 	*) error ;;
 esac
