@@ -1,21 +1,21 @@
- #Playbook qui permet d'installer un serveur web apache/php
-- hosts: all
+#Playbook qui permet d'installer un serveur web apache/php
+- hosts: web
 
-#  vars:
-#   is_debian: "ansible_distribution == 'Debian'"
+  vars:
+    is_debian: "'${ansible_distribution}' == 'debian'"
 
   tasks:
-   - name: Installation d'Apache2
-     action: apt name=apache2 state=installed
-#     only_if: $is_debian
-     tags:   apache2
+    - name: Installation d'Apache2
+      action: apt name=apache2 state=installed
+      only_if: $is_debian
+      tags:   apache2
 
-   - name:   Installation du module PHP d'Apache2
-     action: apt name=libapache2-mod-php5 state=installed
-#     only_if: $is_debian
-     tags:   php5
-     notify: restart serveur web
+    - name:   Installation du module PHP d'Apache2
+      action: apt name=libapache2-mod-php5 state=installed
+      only_if: $is_debian
+      tags:   php5
+      notify: restart server web
 
   handlers:
-   - name: restart serveur web
-     action: service name=apache state=restarted
+    - name: restart server web
+      action: service name=apache state=restarted
