@@ -22,7 +22,7 @@ HOSTS="${MODULE}/hosts"
 LOCAL="127.0.0.1"
 GITNAME="benwend"
 GITEMAIL="benjamin.wend+git@gmail.com"
-GITKEY="$DIRECTORY/.ssh/github.ppk"
+GITKEY="$DIRECTORY/.ssh/github"
 #
 #
 ###
@@ -130,6 +130,11 @@ gitconf() {
 	echo "** Ajout de la clé privée dans l'agent..."
 	if [ -f "$GITKEY" ]
 		then
+		agent=$(ps aux | grep -c ssh-agent)
+		if [ "$agent" -lt 2 ]
+			then
+			ssh-agent /bin/bash
+		fi
 		ssh-add $GITKEY
 	else
 		echo "** INFO : $GITKEY n'existe pas. Veuillez l'ajouter manuellement !"
