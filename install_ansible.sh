@@ -85,7 +85,6 @@ config() {
 		then
 			echo "** Clonage de la branche Ansible : github.com/ansible/ansible.git..."
 			git clone -o .ansible -b ansible git@github.com:benwend/serveurs.git $MODULE
-			ssh-add $DIRECTORY/.ssh/github.ppk
 
 			echo "** Ajout des alias et chemins Ansible..."
 			sed -i \
