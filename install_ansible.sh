@@ -81,7 +81,7 @@ config() {
 	echo "* Début de la configuration :"
 	if [ -d "$ANSIBLE" ]
 	then
-		if [ -d "$MODULE" ]
+		if [ ! -d "$MODULE" ]
 		then
 			echo "** Clonage de la branche Ansible : github.com/ansible/ansible.git..."
 			git clone -o .ansible -b ansible git@github.com:benwend/serveurs.git $MODULE
