@@ -94,8 +94,8 @@ config() {
 export ANSIBLE_HOSTS=\"$HOSTS\"\n" $SOURCE
 
 			sed -i \
-"/echo \"MANPATH=$MANPATH\"/a \
-echo \"ANSIBLE_HOSTS=$ANSIBLE_HOSTS\"" $SOURCE
+"/echo \"MANPATH=/i \
+    echo \"ANSIBLE_HOSTS=$ANSIBLE_HOSTS\"" $SOURCE
 
 			echo \
 "\n# Chargement de l'environnement Ansible au démarrage de la session\n\
