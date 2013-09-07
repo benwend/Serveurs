@@ -61,15 +61,15 @@ usage() {
 value() {
 	echo "Valeurs des paramètres, à modifier directement dans le script :"
 	echo "DIRECTORY = $DIRECTORY"
-	echo "ANSIBLE 	= $ANSIBLE"
-	echo "SOURCE 	= $SOURCE"
-	echo "MODULE 	= $MODULE"
+	echo "ANSIBLE = $ANSIBLE"
+	echo "SOURCE = $SOURCE"
+	echo "MODULE = $MODULE"
 	echo "PLAYBOOKS = $PLAYBOOKS"
-	echo "HOSTS 	= $HOSTS"
-	echo "LOCAL 	= $LOCAL"
-	echo "GITNAME 	= $GITNAME"
-	echo "GITEMAIL 	= $GITEMAIL"
-	echo "GITKEY 	= $GITKEY"
+	echo "HOSTS = $HOSTS"
+	echo "LOCAL = $LOCAL"
+	echo "GITNAME = $GITNAME"
+	echo "GITEMAIL = $GITEMAIL"
+	echo "GITKEY = $GITKEY"
 }
 
 # Role:
