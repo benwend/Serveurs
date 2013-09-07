@@ -3,9 +3,9 @@
 # Script de configuration d'Ansible.
 #
 # Auteur  : Benjamin Wendling <benjamin.wend@gmail.com>
-# Version : 0.5
+# Version : 1.0
 # Date de création : 01/09/2013
-# Date de modification : 07/09/2013
+# Date de modification : 08/09/2013
 # Description :	Script d'installation et de configuration d'Ansible,
 #	et permet désormais de supprimer Ansible. Le script gère aussi
 #	la configuration de Git avec ajout de la clé SSH dans l'agent.
