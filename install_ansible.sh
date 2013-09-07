@@ -84,7 +84,7 @@ config() {
 		if [ ! -d "$MODULE" ]
 		then
 			echo "** Clonage de la branche Ansible : git@github.com:benwend/serveurs.git..."
-			git clone -o .ansible -b ansible git@github.com:benwend/serveurs.git $MODULE
+			git clone -b ansible git@github.com:benwend/serveurs.git $MODULE
 
 			echo "** Ajout des alias et chemins Ansible..."
 			sed -i \
