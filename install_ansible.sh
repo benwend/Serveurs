@@ -8,7 +8,7 @@
 # Date de modification : 07/09/2013
 # Description :	Script d'installation et de configuration d'Ansible,
 #	et permet désormais de supprimer Ansible. Le script gère aussi
-#	la configuration de Git.
+#	la configuration de Git avec ajout de la clé SSH dans l'agent.
 #
 ###
 # Constantes initialisée par défaut
@@ -22,6 +22,7 @@ HOSTS="${MODULE}/hosts"
 LOCAL="127.0.0.1"
 GITNAME="benwend"
 GITEMAIL="benjamin.wend+git@gmail.com"
+GITKEY="$DIRECTORY/.ssh/github.ppk"
 #
 #
 ###
@@ -47,7 +48,7 @@ usage() {
 	echo "Liste des options :"
 	echo " -h : afficher l'aide"
 	echo " config  : Configurer Ansible"
-	echo " consts  : Valeur des constantes"
+	echo " consts  : Valeurs des constantes"
 	echo " install : Installer Ansible"
 	echo " remove  : Supprimer Ansible"
 }
@@ -58,30 +59,17 @@ usage() {
 #	value
 #
 value() {
-	echo "Valeurs des paramètres :"
-	echo "DIRECTORY : $DIRECTORY"
-	echo "ANSIBLE : $ANSIBLE"
-	echo "SOURCE : $SOURCE"
-	echo "MODULE : $MODULE"
-	echo "PLAYBOOKS : $PLAYBOOKS"
-	echo "HOSTS : $HOSTS"
-	echo "LOCAL : $LOCAL"
-	echo "GITNAME : $GITNAME"
-	echo "GITEMAIL : $GITEMAIL"
-}
-
-# Role:
-#	Installation de modules Python, de Pip et de Git.
-# Usage:
-#	install
-#
-install() {
-	echo "* Début de l'installation :"
-	echo "** Installation des paquets : git python-pip python-jinja2 python-yaml python-paramiko..."
-	sudo apt-get install git python-pip python-jinja2 python-yaml python-paramiko
-	echo "** Clonage du projet Ansible : github.com/ansible/ansible.git..."
-	git clone git://github.com/ansible/ansible.git $DIRECTORY
-	echo "* Fin de l'installation."
+	echo "Valeurs des paramètres, à modifier directement dans le script :"
+	echo "DIRECTORY = $DIRECTORY"
+	echo "ANSIBLE 	= $ANSIBLE"
+	echo "SOURCE 	= $SOURCE"
+	echo "MODULE 	= $MODULE"
+	echo "PLAYBOOKS = $PLAYBOOKS"
+	echo "HOSTS 	= $HOSTS"
+	echo "LOCAL 	= $LOCAL"
+	echo "GITNAME 	= $GITNAME"
+	echo "GITEMAIL 	= $GITEMAIL"
+	echo "GITKEY 	= $GITKEY"
 }
 
 # Role:
@@ -117,11 +105,11 @@ config() {
 			# Pour finaliser l'installation, l'utilisateur doit recharger .bashrc
 			echo "* Pour terminer la configuration : $ source ~/.bashrc."
 		else
-			echo "* Arrêt de la configuration : $MODULE a déjà été cloné !"
+			echo "* ERREUR : $MODULE a déjà été cloné !"
 			exit 1
 		fi
 	else
-		echo "* Arrêt de la configuration : $ANSIBLE n'est pas installé !"
+		echo "* ERREUR : $ANSIBLE n'est pas installé !"
 		echo "Usage : $0 install"
 		exit 1
 	fi
@@ -133,12 +121,35 @@ config() {
 #	gitconfig
 #
 gitconf() {
-	echo "** Configuration de git en cours..."
+	echo "** Configuration globale de git en cours..."
 	git config --global color.diff auto
 	git config --global color.status auto
 	git config --global color.branch auto
 	git config --global user.name $GITNAME
 	git config --global user.email $GITEMAIL
+
+	echo "** Ajout de la clé privée dans l'agent..."
+	if [ -f "$GITKEY" ]
+		then
+		ssh-add $GITKEY
+	else
+		echo "** INFO : $GITKEY n'existe pas. Veuillez l'ajouter manuellement !"
+	fi
+}
+
+# Role:
+#	Installation de modules Python, de Pip et de Git.
+# Usage:
+#	install
+#
+install() {
+	echo "* Début de l'installation :"
+	echo "** Installation des paquets : git python-pip python-jinja2 python-yaml python-paramiko..."
+	sudo apt-get install git python-pip python-jinja2 python-yaml python-paramiko
+	gitconfig
+	echo "** Clonage du projet Ansible : github.com/ansible/ansible.git..."
+	git clone git://github.com/ansible/ansible.git $DIRECTORY
+	echo "* Fin de l'installation."
 }
 
 # Role:
@@ -175,31 +186,26 @@ remove() {
 	echo "* Fin de la suppression."
 }
 
-# Pas de paramètre
+# Si pas de paramètres
 [[ $# -lt 1 ]] && error
-
+# Sinon
 case "$1" in
 	-h)
 		usage
 		break;;
-
 	config)
 		config
 		break;;
-
 	consts)
 		value
 		break;;
-
 	install)
 		install
 		break;;
-
 	remove)
 		remove
 		break;;
-
-	*) error ;;
+	*)
+		error ;;
 esac
-
 exit 0
