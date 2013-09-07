@@ -167,14 +167,14 @@ remove() {
 	echo "** Suppression des sources..."
 	if [ -d "$ANSIBLE" ]
 		then
-		rm -r $ANSIBLE
+		rm -rf $ANSIBLE
 	else
 		echo "** INFO : $ANSIBLE déjà supprimé !"
 	fi
 
 	if [ -d "$MODULE" ]
 		then
-		rm -r $MODULE
+		rm -rf $MODULE
 	else
 		echo "** INFO : $MODULE déjà supprimé !"
 	fi
