@@ -147,7 +147,7 @@ install() {
 	sudo apt-get install git python-pip python-jinja2 python-yaml python-paramiko
 	gitconfig
 	echo "** Clonage du projet Ansible : github.com/ansible/ansible.git..."
-	git clone git://github.com/ansible/ansible.git $DIRECTORY
+	git clone git://github.com/ansible/ansible.git $ANSIBLE
 	echo "* Fin de l'installation."
 }
 
