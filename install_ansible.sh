@@ -83,23 +83,23 @@ config() {
 	then
 		if [ ! -d "$MODULE" ]
 		then
-			echo "** Clonage de la branche Ansible : github.com/ansible/ansible.git..."
+			echo "** Clonage de la branche Ansible : git@github.com:benwend/serveurs.git..."
 			git clone -o .ansible -b ansible git@github.com:benwend/serveurs.git $MODULE
 
 			echo "** Ajout des alias et chemins Ansible..."
 			sed -i \
-			"/# Print out values unless -q is set/i \
-			# ALIAS\n\
-			# Chemin du fichier HOSTS\n\
-			export ANSIBLE_HOSTS=$HOSTS\n" $SOURCE
+"/# Print out values unless -q is set/i \
+# ALIAS\n\
+# Chemin du fichier HOSTS\n\
+export ANSIBLE_HOSTS=$HOSTS\n" $SOURCE
 
 			sed -i \
-			"/echo \"MANPATH=$MANPATH\"/a \
-			echo \"ANSIBLE_HOSTS=$ANSIBLE_HOSTS\"/" $SOURCE
+"/echo \"MANPATH=$MANPATH\"/a \
+echo \"ANSIBLE_HOSTS=$ANSIBLE_HOSTS\"" $SOURCE
 
-			echo -e \
-			"# Chargement de l'environnement Ansible au démarrage de la session\
-			source ~/ansible/hacking/env-setup" >> $DIRECTORY/.bashrc
+			echo \
+"# Chargement de l'environnement Ansible au démarrage de la session\
+source ~/ansible/hacking/env-setup" >> $DIRECTORY/.bashrc
 
 			# Pour finaliser l'installation, l'utilisateur doit recharger .bashrc
 			echo "* Pour terminer la configuration : $ source ~/.bashrc."
