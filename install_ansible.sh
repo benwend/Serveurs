@@ -160,14 +160,14 @@ remove() {
 	echo "* Début de la suppression d'Ansible :"
 
 	echo "** Suppression des sources..."
-	if [ -d "$ANSIBLE"]
+	if [ -d "$ANSIBLE" ]
 		then
 		rm -r $ANSIBLE
 	else
 		echo "** INFO : $ANSIBLE déjà supprimé !"
 	fi
 
-	if [ -d "$MODULE"]
+	if [ -d "$MODULE" ]
 		then
 		rm -r $MODULE
 	else
