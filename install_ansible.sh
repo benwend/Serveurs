@@ -22,7 +22,7 @@ HOSTS="${MODULE}/hosts"
 LOCAL="127.0.0.1"
 GITNAME="benwend"
 GITEMAIL="benjamin.wend+git@gmail.com"
-GITKEY="$DIRECTORY/.ssh/github"
+GITKEY="$DIRECTORY/.ssh/gitsrv"
 #
 #
 ###
@@ -98,7 +98,7 @@ export ANSIBLE_HOSTS=$HOSTS\n" $SOURCE
 echo \"ANSIBLE_HOSTS=$ANSIBLE_HOSTS\"" $SOURCE
 
 			echo \
-"# Chargement de l'environnement Ansible au démarrage de la session\
+"\n# Chargement de l'environnement Ansible au démarrage de la session\n\
 source ~/ansible/hacking/env-setup" >> $DIRECTORY/.bashrc
 
 			# Pour finaliser l'installation, l'utilisateur doit recharger .bashrc
