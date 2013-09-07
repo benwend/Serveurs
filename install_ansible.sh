@@ -3,7 +3,7 @@
 # Script de configuration d'Ansible.
 #
 # Auteur  : Benjamin Wendling <benjamin.wend@gmail.com>
-# Version : 0.4
+# Version : 0.5
 # Date de création : 01/09/2013
 # Date de modification : 07/09/2013
 # Description :	Script d'installation et de configuration d'Ansible,
@@ -17,9 +17,7 @@ DIRECTORY="/home/$USER"
 ANSIBLE="${DIRECTORY}/ansible"
 SOURCE="${ANSIBLE}/hacking/env-setup"
 MODULE="${DIRECTORY}/.ansible"
-PLAYBOOKS="${MODULE}/playbooks/"
 HOSTS="${MODULE}/hosts"
-LOCAL="127.0.0.1"
 GITNAME="benwend"
 GITEMAIL="benjamin.wend+git@gmail.com"
 GITKEY="$DIRECTORY/.ssh/gitsrv"
@@ -64,9 +62,7 @@ value() {
 	echo "ANSIBLE = $ANSIBLE"
 	echo "SOURCE = $SOURCE"
 	echo "MODULE = $MODULE"
-	echo "PLAYBOOKS = $PLAYBOOKS"
 	echo "HOSTS = $HOSTS"
-	echo "LOCAL = $LOCAL"
 	echo "GITNAME = $GITNAME"
 	echo "GITEMAIL = $GITEMAIL"
 	echo "GITKEY = $GITKEY"
