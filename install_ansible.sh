@@ -91,7 +91,7 @@ config() {
 "/# Print out values unless -q is set/i \
 # ALIAS\n\
 # Chemin du fichier HOSTS\n\
-export ANSIBLE_HOSTS=$HOSTS\n" $SOURCE
+export ANSIBLE_HOSTS=\"$HOSTS\"\n" $SOURCE
 
 			sed -i \
 "/echo \"MANPATH=$MANPATH\"/a \
