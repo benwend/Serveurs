@@ -166,7 +166,7 @@ remove() {
 	else
 		echo "** INFO : $ANSIBLE déjà supprimé !"
 	fi
-	
+
 	if [ -d "$MODULE"]
 		then
 		rm -r $MODULE
@@ -186,7 +186,7 @@ remove() {
 }
 
 # Si pas de paramètres
-[[ $# -lt 1 ]] && error
+[ "$#" -lt 1 ] && error
 # Sinon
 case "$1" in
 	-h)
