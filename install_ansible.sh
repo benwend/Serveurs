@@ -119,7 +119,7 @@ source ~/ansible/hacking/env-setup" >> $DIRECTORY/.bashrc
 # Usage:
 #	gitconfig
 #
-gitconf() {
+gitconfig() {
 	echo "** Configuration globale de git en cours..."
 	git config --global color.diff auto
 	git config --global color.status auto
@@ -181,7 +181,7 @@ remove() {
 
 	echo "** Suppression des alias et chemins..."
 	sed -i "/# Chargement de l'environnement Ansible au démarrage de la session/d" $DIRECTORY/.bashrc
-	sed -i "/source ~/ansible/hacking/env-setup/d" $DIRECTORY/.bashrc
+	sed -i "/source ~\/ansible\/hacking\/env-setup/d" $DIRECTORY/.bashrc
 
 	echo "** Suppression des dépendances..."
 	sudo apt-get autoremove --purge python-pip python-jinja2 python-yaml python-paramiko
