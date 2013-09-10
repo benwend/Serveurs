@@ -1,3 +1,4 @@
+---
 #Playbook qui permet d'installer GitLab
 - hosts: ovh
 
