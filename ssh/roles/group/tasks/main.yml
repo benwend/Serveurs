@@ -1,0 +1,7 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Configure ssh file
+  template: src=ssh.conf dest=/etc/ssh/sshd_config
+  tags: ssh
+  notify: restart ssh

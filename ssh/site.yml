@@ -1,0 +1,23 @@
+---
+# This playbook deploys the whole application stack in this site.  
+
+- name: configure and deploy the ssh server to all except ovh
+  hosts: all:!ovh
+  user: root
+
+  roles:
+    - group
+
+- name: configure and deploy the ssh server to ovh
+  hosts: ovh
+  user: root
+
+  roles:
+    - ovh
+
+- name: configure the fw iptables to all
+  hosts: all
+  user: root
+
+  roles:
+    - common

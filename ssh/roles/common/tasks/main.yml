@@ -1,0 +1,7 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Configure iptables rule for ssh
+  action: command "iptables -A INPUT -p tcp -i eth0 --dport 2222 -j ACCEPT"
+  tags: iptables
+  notify: restart iptables
