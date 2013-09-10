@@ -4,6 +4,9 @@
 #
 - hosts: all
 
+  user: administrateur
+  sudo: yes
+
   tasks:
     - name:   Installation de htop
       action: apt name=htop state=installed
