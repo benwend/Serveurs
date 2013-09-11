@@ -3,9 +3,9 @@
 # Script de configuration d'Ansible.
 #
 # Auteur  : Benjamin Wendling <benjamin.wend@gmail.com>
-# Version : 1.0
+# Version : 1.1
 # Date de création : 01/09/2013
-# Date de modification : 08/09/2013
+# Date de modification : 11/09/2013
 # Description :	Script d'installation et de configuration d'Ansible,
 #	et permet désormais de supprimer Ansible. Le script gère aussi
 #	la configuration de Git avec ajout de la clé SSH dans l'agent.
@@ -26,7 +26,19 @@ GITKEY="$DIRECTORY/.ssh/gitsrv"
 ###
 
 # Role:
-#	Affiche un message d'erreur
+#	Affiche un message d'erreur si exécution avec droits root
+# Usage:
+#	root
+#
+root() {
+	echo "ERREUR : utilisateur ou exécution avec droits ROOT !" >&2
+	echo "Pour des raisons de bon fonctionnement," >&2
+	echo "Ansible ne doit pas être installé avec les droits de super-administrateur !" >&2
+	exit 1
+}
+
+# Role:
+#	Affiche un message d'erreur s'il n'y a pas de paramètres
 # Usage:
 #	error
 #
@@ -188,6 +200,8 @@ remove() {
 
 # Si pas de paramètres
 [ "$#" -lt 1 ] && error
+# Si $USER = root on quitte
+[ "$USER" = "root" ] && root
 # Sinon
 case "$1" in
 	-h)
