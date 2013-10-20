@@ -1,0 +1,44 @@
+#############################################
+#											#
+#		CLOISSEMENT D'UN SERVICE			#
+#											#
+#		  à l'aide de Makejail				#
+#											#
+#############################################
+
+#####
+## INFOS
+# Date : 20/10/2013
+# Moyen : makejail, isolement/cloissement d'un service dans un chroot
+
+
+## Documentation :
+	Magazine MISC HS n°4 : Sécurité côté serveur. Christophe Bailleux
+	http://www.floc.net/makejail/current/doc/
+	http://bibabox.fr/apache2-mpm-itk-utiliser-un-utiliser-un-utilisateur-different-pour-chaque-vhost/
+	
+
+## Résumé :
+	Sécurisation du serveur en cloissonant les services sensibles (BD / www / Proxy...), à l'aide de makejail, script python.
+	L'application va rechercher tous les processus utiliser par le service puis l'isoler dans un chroot.
+
+## Etapes :
+1)	
+
+2)	
+
+3)	
+
+4)	
+
+5)	
+
+6)	
+
+7)	
+
+8)	
+
+9)	
+
+10)	
