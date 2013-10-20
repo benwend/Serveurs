@@ -1,0 +1,89 @@
+#############################################
+#											#
+#		SECURISATION D'UN NOYAU LINUX		#
+#											#
+#		à l'aide du patch GRSecurity		#
+#											#
+#############################################
+
+#####
+## INFOS
+# Date : 20/10/2013
+# Patch : GRSecurity
+# Audit : PaxTest
+
+
+## Documentation :
+	Magazine MISC HS n°4 : Sécurité côté serveur. Christophe Bailleux
+	http://aide.sivit.fr/index.php?2005/06/27/35-patcher-un-kernel-linux-24-avec-grsecurity
+	http://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Customize_Configuration
+	http://www.linux-france.org/article/mininet/noyau/noyau-2.html
+
+## Résumé :
+	Sécurisation du serveur à l'aide du patch de sécurité GRSecurity, appliqué à la compilation du noyau.
+	Le travail se fera aussi sous l'uid root. Nous prendrerons comme version du noyau, la 2.6.32.61.
+	Un patch correspond à un noyau en particulier. Tous les noyau Linux n'ont pas forcément un patch.
+
+## Etapes :
+1)	Création d'un répertoire de travail.
+		# cd; mkdir noyau_secur
+		# cd noyau_secur
+
+2)	Téléchargement des sources.
+		Télécharger, décompresser et désarchiver votre version du noyau Linux, ainsi que son patch GRSecurity :
+		# wget https://www.kernel.org/pub/linux/kernel/v2.6/longterm/v2.6.32/linux-2.6.32.61.tar.xz
+		# unxz -d linux-2.6.32.61.tar.xz
+		# tar xvf linux-2.6.32.61.tar
+		# wget http://grsecurity.net/stable/grsecurity-2.9.1-2.6.32.61-201309281101.patch
+		ou
+		# wget https://www.grsecurity.net/stable/grsecurity-2.9.1-2.6.32.61-201309281101.patch
+
+3)	Fusion du patch au noyau.
+		# cd linux-2.6.32.61
+		# patch -p1 < ../grsecurity-2.9.1-2.6.32.61-201309281101.patch
+
+4)	Activation des options voulues.
+		Importer tout d'abord le fichier de config de votre noyau actuel
+		# cp /boot/config-XXX .config
+		# apt-get install libncurses5-dev
+		# make menuconfig
+
+5)	OPTIONS
+
+6)	Compilation du noyau.
+		# make clean && make deb && make bzImage && make modules && make modules_install
+
+6bis) Compilation du noyau pour un Debian, création d'un .deb.
+		# fakeroot make-kpkg clean
+		# fakeroot make-kpkg --revision=1.0 --append-to-version=-intel kernel-image
+		Si la cmd réussie, elle doit terminé par la ligne : kernel-image-2.6.32.61-grsec-intel_1.0_i686.deb
+
+7)	Installation du noyau.
+		# cp arch/x86/boot/bzImage /boot/vmlinuz-2.6.32.61-grsec
+		# cp System.map /boot/System.map-2.6.32.61-grsec
+		# cp .config /boot/config-2.6.32.61-grsec
+		# mkinitramfs -k -o /boot/initrd.img-2.6.32.61-grsec 2.6.32.61-grsec
+
+7bis) Installation du noyau pour un Debian.
+		# dpkg -i kernel-image-2.6.32.61-grsec-intel_1.0_i686.deb
+		Répondre Yes/No/Yes
+		# rm /vmlinuz
+		# ln -s /boot/vmlinuz-2.6.32.61-grsec
+		# rm /vmlinuz.old
+		# ln -s /boot/vmlinuz-2.6.32.61-grsec.old
+
+8)	Reconfiguration du Grub/2 puis redémarrage.
+		# update-grub
+		# update-grub2
+		# reboot
+
+9)	Vérification du démarrage du bon noyau.
+		# uname -a
+		# ps auxw
+
+10)	Audit de sécurité du noyau à l'aide du programme Paxtest.
+		# cd; wget http://grsecurity.net/~spender/paxtest-0.9.11.tar.gz
+		# tar -zxvf paxtest-0.9.11.tar.gz
+		# cd paxtest-0.9.11
+		# make linux
+		# ./paxtest [kiddie|blackhat]
