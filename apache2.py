@@ -12,7 +12,8 @@
 #############################################
 #				Changelog					#
 # 											#
-# Création		26/10/2013		B. WENDLING	#
+# Creation		26/10/2013		B. WENDLING	#
+# Update		26/10/2013		B. WENDLING	#
 # 											#
 #############################################
 
@@ -47,7 +48,8 @@ processNames=["apache2"]
 # The test commands which should be executed.
 # Format: ["command1","command2"]
 # Default: []
-testCommandsOutsideJail=["wget -r --spider http://localhost/", "lynx --source https://localhost/"]
+testCommandsOutsideJail=["wget -r --spider http://localhost/",
+						 "lynx --source https://localhost/"]
 
 
 ###################
@@ -58,11 +60,6 @@ testCommandsOutsideJail=["wget -r --spider http://localhost/", "lynx --source ht
 # according to the file /var/lib/dpkg/info/$package.list.
 # Format: ["package1","package2"]
 # Default: []
-packages=["apache2-mpm-itk", "apache2-utils", "apache2.2-bin",
-"apache2.2-common", "libapache2-mod-php5", "libapr1",
-"libaprutil1", "libaprutil1-dbd-sqlite3", "libaprutil1-ldap",
-"libonig2", "libqdbm14", "php5",
-"php5-cli", "php5-common", "php5-suhosin ssl-cert"]
 
 
 ###################
@@ -75,13 +72,13 @@ packages=["apache2-mpm-itk", "apache2-utils", "apache2.2-bin",
 # with [] will be correctly matched.
 # Format: ["path1","path2"]
 # Default: []
-forceCopy=["/etc/hosts",
-		"/etc/mime.types",
-		"/etc/resolv.conf",
-		"/etc/apache2/mods-enables/*",
-		"/usr/lib/gconv",
-		"/usr/lib/perl",
-		"/usr/share/perl*"]
+forceCopy=[ "/etc/hosts",
+            "/etc/mime.types",
+            "/etc/resolv.conf",
+            "/etc/apache2/mods-enables/*",
+            "/usr/lib/gconv",
+            "/usr/lib/perl",
+            "/usr/share/perl*"]
 
 # PRESERVE
 # Useful only if cleanJailFirst=1, makejail won't remove files or directories if
@@ -89,7 +86,10 @@ forceCopy=["/etc/hosts",
 # When updating a jail, you should for example put the locations of log files here.
 # Format: ["path1","path2"]
 # Default: []
-preserve=["/var/www", "/var/log", "/etc/shadow"]
+preserve=["/var/www",
+		  "/var/log/apache",
+		  "/dev/log",
+		  "/etc/shadow"]
 
 # USERS
 # Makejail will filter the files listed in the directive userFiles and
@@ -116,11 +116,9 @@ groups=["www-data"]
 # listed in the directive "users".
 # Format: ["file1","file2]
 # Default: ["/etc/passwd","/etc/shadow"]
-userFiles=["/etc/passwd", "/etc/shadow"]
 
 # GROUPFILES
 # List of the files whose contents should be filtered, to keep only the groups
 # listed in the directive "groups".
 # Format: ["file1","file2]
 # Default:["/etc/group","/etc/gshadow"]
-groupFiles=["/etc/group", "/etc/gshadow"]

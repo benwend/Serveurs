@@ -16,6 +16,7 @@
 	Magazine MISC HS n°4 : Sécurité côté serveur. Christophe Bailleux
 	http://www.floc.net/makejail/current/doc/
 	http://bibabox.fr/apache2-mpm-itk-utiliser-un-utiliser-un-utilisateur-different-pour-chaque-vhost/
+	/usr/share/doc/makejail/
 	
 
 ## Résumé :
@@ -30,14 +31,14 @@
 2)	Installation du script Python "MakeJail"
 		# apt-get install makejail
 
-3) Installation aussi de lynx pour les tests :
-		# apt-get install lynx
+3) Installation aussi de programmes pour les tests :
+		# apt-get install lynx wget
 
 4)	Personnalisation du confinement du processus à l'aide d'un fichier de configuration :
-		# nano /etc/makejail/apache2.py
+		# nano /etc/makejail/apache2
 
 5)	Lancement du script avec le fichier de configuration comme paramètre :
-		# makejail /etc/makejail/apache2.py
+		# makejail /etc/makejail/apache2
 
 6)	Une erreur apparait :
 		Executing : file /usr/lib/apache2/modules/hhtpd.exp
@@ -45,7 +46,7 @@
 		 Checking path '.'
 		ERROR: The path '.' is not absolute
 	Ne pas en tenir commpte et relancer le script
-		# makejail /etc/makejail/apache2.py
+		# makejail /etc/makejail/apache2
 
 7)	Installation en environnement confiné :
 		# ls /chroot/apache2
