@@ -14,9 +14,9 @@
 # Constantes initialisée par défaut
 #
 DIRECTORY="/home/$USER"
-ANSIBLE="${DIRECTORY}/ansible"
+ANSIBLE="${DIRECTORY}/.ansible"
 SOURCE="${ANSIBLE}/hacking/env-setup"
-MODULE="${DIRECTORY}/.ansible"
+MODULE="${DIRECTORY}/ansible"
 HOSTS="${MODULE}/hosts"
 GITNAME="benwend"
 GITEMAIL="benjamin.wend+git@gmail.com"
