@@ -103,14 +103,14 @@ export ANSIBLE_HOSTS=\"$HOSTS\"\n" $SOURCE
 
 			sed -i \
 "/echo \"MANPATH=/i \
-    echo \"ANSIBLE_HOSTS=$ANSIBLE_HOSTS\"" $SOURCE
+    echo \"ANSIBLE_HOSTS=\$ANSIBLE_HOSTS\"" $SOURCE
 
 			echo \
 "\n# Chargement de l'environnement Ansible au démarrage de la session\n\
 source ~/ansible/hacking/env-setup" >> $DIRECTORY/.bashrc
 
 			# Pour finaliser l'installation, l'utilisateur doit recharger .bashrc
-			echo "* Pour terminer la configuration : $ source ~/.bashrc."
+			echo "* Pour terminer la configuration : $ source ~/.bashrc"
 		else
 			echo "* ERREUR : $MODULE a déjà été cloné !"
 			exit 1
