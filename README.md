@@ -1,4 +1,4 @@
-serveurs
+Serveurs
 ========
 
 Scripts pour mes serveurs personnels :
@@ -24,6 +24,18 @@ Branch Info
 
 	* Actuellement -> branche de développement/production
 	* Playbooks uniquement
+
+Execution
+=========
+
+	Commande pour lancer une commande (-a) sous un utilisateur (-u) avec droit sudo (-K) sur le serveur voulu (host) :
+	* ansible host -a "cmd" -u username -K
+
+	Lancement d'une commande (-a) avec un username (-u) via un user(-U) qui a des droits sudo (-K) :
+	* ansible host -a "cmd" -u username -U otherUser -K
+
+	Exécution d'un playbook :
+	* ansible-playbook -i host playbook.yml
 
 Author
 ======
