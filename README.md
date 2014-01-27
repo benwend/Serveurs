@@ -32,7 +32,7 @@ Execution
 	* ansible host -a "cmd" -u username -K
 
 	Lancement d'une commande (-a) avec un username (-u) via un user(-U) qui a des droits sudo (-K) :
-	* ansible host -a "cmd" -u username -U otherUser -K
+	* ansible host -a "cmd" -u username -K -U otherUser
 
 	Exécution d'un playbook :
 	* ansible-playbook -i host playbook.yml
