@@ -1,18 +1,16 @@
 # http://www.ansibleworks.com/docs/patterns.html
 # Serveur perso
-[awacs]
-192.168.0.10	ansible_connection=local
+awacs	ansible_connection=local	ansible_ssh_host=127.0.0.1	ansible_ssh_user=*	#ansible_ssh_port=*
 
 # Serveur dédié
-[ovh]
-***.kimsufi.com	ansible_connection=ssh	ansible_ssh_user=***
+ovh		ansible_connection=ssh		ansible_ssh_host=*.*.*.*	ansible_ssh_user=*	#ansible_ssh_port=*
 
 # Serveur Web
-[web:children]
+[web]
 awacs
 ovh
 
 # Base de données
-[bdd:children]
+[bdd]
 awacs
 ovh
