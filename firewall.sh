@@ -16,6 +16,10 @@
 # Short-Description: Start firewall daemon at boot time
 # Description:       Custom Firewall scrip.
 ### END INIT INFO
+### UPDATE SCRIPT
+# Ajouts de règles contre les attaques de type Flood et scan de port.
+# Source : http://fr.openclassrooms.com/informatique/cours/securiser-son-serveur-linux/filtrer-le-trafic-via-le-firewall
+### 
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
@@ -92,6 +96,13 @@ fi
 /sbin/iptables -A OUTPUT -j LOG
 /sbin/iptables -A OUTPUT -j REJECT
 /sbin/iptables -P OUTPUT DROP
+# Contre le flood ou déni de service
+# Limite le nombre de demandes de connexion (1 demande/seconde)
+iptables -A FORWARD -p tcp --syn -m limit --limit 1/second -j ACCEPT
+iptables -A FORWARD -p udp -m limit --limit 1/second -j ACCEPT
+iptables -A FORWARD -p icmp --icmp-type echo-request -m limit --limit 1/second -j ACCEPT
+# Contre le scan de port
+iptables -A FORWARD -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/second -j ACCEPT
 # Other network protections
 # (some will only work with some kernel versions)
 echo 1 > /proc/sys/net/ipv4/tcp_syncookies
