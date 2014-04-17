@@ -16,6 +16,8 @@
 3) Contrôler les entrées avec Fail2ban
 	- Installer Fail2ban : sudo apt-get-install fail2ban
 	- Éditer le fichier /etc/fail2ban/jail.conf :
+		destemail = your@mail
+
 		[ssh]
 		enabled = true
 		port = ssh
@@ -40,3 +42,41 @@
 6) Surveiller le tout avec Logwatch
 	- sudo apt-get install logwatch
 	- /usr/sbin/logwatch --output mail --mailto contact@benjamin-wendling.fr --detail high
+
+7) Se prémunir contre les intrusions
+	- Bloquer en temps réel la plupart des scans de port connus :
+		_ Installer Porsentry :
+			apt-get install portsentry
+		_ Configurer Portsentry (nano /etc/portsentry/portsentry.conf) :
+			Commentez les lignes KILL_HOSTS_DENY.
+			Décommentez la ligne KILL_ROUTE="/sbin/iptables -I INPUT -s $TARGET$ -j DROP".
+			Ainsi, Portsentry ajoutera une règle dans le firewall (iptables) pour rejeter les paquets en cas de scans.
+		_ Lancer le logiciel par 2 fois pour les protocoles TCP et UDP :
+			portsentry –audp
+			portsentry –atcp
+	- Bloquer les rootkits et backdoors :
+		_ Installer Rkhunter :
+			apt-get install rkhunter
+		_ Configurer Rkhunter (nano /etc/default/rkhunter) :
+			REPORT_EMAIL : indiquez un mail pour recevoir des alertes de Rkhunter ;
+			CRON_DAILY_RUN : mettez « yes » pour une vérification quotidienne de votre machine via un cron.
+
+8) Trucs & Astuces
+	- Apache2 :
+		_ nano /etc/apache2/apache2.conf
+			ServerSignature=off
+			ServerTokens=prod
+	- MySQL :
+		_ /usr/bin/mysql_secure_installation
+	- FTP :
+		_ Ne surtout pas créer de FTP anonymes
+	- Mail :
+		_ SpamAssassin
+		_ Connexion sécurisées SSl ou TLS
+
+9) Tester la sécurité du serveur
+	- Scan de ports :
+		_ Avec nmap :
+			nmap -v IP_Serveur
+	- Scan de vulnérabilité :
+		_
