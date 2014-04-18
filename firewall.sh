@@ -27,8 +27,8 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin
 TCP_SERVICES="22" # SSH only
 UDP_SERVICES=""
 # Services the system will use from the network
-REMOTE_TCP_SERVICES="80 443" # web browsing
-REMOTE_UDP_SERVICES="53" # DNS
+REMOTE_TCP_SERVICES="25 80 443" # web browsing
+REMOTE_UDP_SERVICES="53 123" # DNS
 # Network that will be used for remote mgmt
 # (if undefined, no rules will be setup)
 # NETWORK_MGMT=192.168.0.0/24
