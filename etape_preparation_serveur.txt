@@ -1,6 +1,9 @@
 *** 5 premières minutes sur un serveur Debian ***
 
-** Source : http://blog.nicolargo.com/2013/03/mes-5-premieres-minutes-sur-un-serveur-debian.html
+** Source : 
+**	http://blog.nicolargo.com/2013/03/mes-5-premieres-minutes-sur-un-serveur-debian.html
+** 	http://fr.openclassrooms.com/informatique/cours/securiser-son-serveur-linux
+**	http://blog.nicolargo.com/2013/06/ma-methode-pour-gerer-les-regles-iptables.html
 
 1) Création de compte :
 	- Ne pas utiliser le compte root
@@ -17,7 +20,6 @@
 	- Installer Fail2ban : sudo apt-get-install fail2ban
 	- Éditer le fichier /etc/fail2ban/jail.conf :
 		destemail = your@mail
-
 		[ssh]
 		enabled = true
 		port = ssh
@@ -33,6 +35,7 @@
 	- sudo wget --no-check-certificate -O /etc/init.d/firewall.sh https://raw.github.com/nicolargo/debianpostinstall/master/firewall.sh
 	- sudo chmod a+x /etc/init.d/firewall.sh
 	- sudo update-rc.d firewall.sh defaults 20
+	- iptables -n -L -v --line-numbers
 
 5) Prendre soin de ses fondations en tenant son système à jour
 	- sudo apt-get install cron-apt
@@ -42,6 +45,7 @@
 6) Surveiller le tout avec Logwatch
 	- sudo apt-get install logwatch
 	- /usr/sbin/logwatch --output mail --mailto contact@benjamin-wendling.fr --detail high
+	- ls -l /etc/cron.daily/ | grep logwatch
 
 7) Se prémunir contre les intrusions
 	- Bloquer en temps réel la plupart des scans de port connus :
@@ -75,8 +79,11 @@
 		_ Connexion sécurisées SSl ou TLS
 
 9) Tester la sécurité du serveur
+	- Voir les ports ouverts :
+		# netstat -lapute
 	- Scan de ports :
 		_ Avec nmap :
-			nmap -v IP_Serveur
+			# nmap -v -A IP_Serveur
 	- Scan de vulnérabilité :
-		_
+		_ Avec OpenVAS :
+
