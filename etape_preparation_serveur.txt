@@ -1,25 +1,38 @@
-*** 5 premières minutes sur un serveur Debian ***
+*********************************************************
+*														*
+*		5 premières minutes sur un serveur Debian		*
+*														*
+*********************************************************
+* Source : 												*
+*	http://blog.nicolargo.com/2013/03/mes-5-premieres-minutes-sur-un-serveur-debian.html
+* 	http://fr.openclassrooms.com/informatique/cours/securiser-son-serveur-linux
+*	http://blog.nicolargo.com/2013/06/ma-methode-pour-gerer-les-regles-iptables.html
+*														*
+*********************************************************
 
-** Source : 
-**	http://blog.nicolargo.com/2013/03/mes-5-premieres-minutes-sur-un-serveur-debian.html
-** 	http://fr.openclassrooms.com/informatique/cours/securiser-son-serveur-linux
-**	http://blog.nicolargo.com/2013/06/ma-methode-pour-gerer-les-regles-iptables.html
-
-1) Création de compte :
+1) CRÉATION DE COMPTE
 	- Ne pas utiliser le compte root
 	- Créer un compte qui se connectera avec sudo
 
-2) SSH
-	- Pousser la clé publique sur le serveur distant : ssh-copy-id morpheus@monserveur
-	- Dans etc/ssh/sshd_config :
-		_ Désactiver connexion root -> PermitRootLogin no
-		_ Désactiver connexion par mot de passe -> PasswordAuthentication no
-	- Relancer SSH : sudo service  ssh restart
+
+2) CONNEXION À DISTANCE VIA SSH
+	- Créer une paire de clés SSH pour pouvoir se connecter à son serveur
+	- Pousser la clé publique sur le serveur distant :
+		$ ssh-copy-id user@monserveur
+	- Éditer etc/ssh/sshd_config :
+		_ Désactiver la connexion pour root -> PermitRootLogin no
+		_ Désactiver l'authentification par mot de passe -> PasswordAuthentication no
+	- Relancer le service SSH :
+		$ sudo service ssh restart
+
 			
-3) Contrôler les entrées avec Fail2ban
-	- Installer Fail2ban : sudo apt-get-install fail2ban
-	- Éditer le fichier /etc/fail2ban/jail.conf :
-		destemail = your@mail
+3) CONTRÔLER LES ENTRÉES AVEC FAIL2BAN
+	- Installer Fail2ban :
+		$ sudo apt-get-install fail2ban
+	- Installer un MTA pour que Fail2Ban puisse envoyer des rapports
+	- Éditer /etc/fail2ban/jail.conf :
+		mta = yourMTA
+		destemail = your@address.mail
 		[ssh]
 		enabled = true
 		port = ssh
@@ -28,62 +41,77 @@
 		logpath = /var/log/auth.log
 		maxretry = 3
 		bantime = 300
+	- Relancer le service Fail2ban :
+		$ sudo service fail2ban restart
 
-	- Relancer Fail2ban : sudo service fail2ban restart
 
-4) Fermer les fenêtres du Firewall
-	- sudo wget --no-check-certificate -O /etc/init.d/firewall.sh https://raw.github.com/nicolargo/debianpostinstall/master/firewall.sh
-	- sudo chmod a+x /etc/init.d/firewall.sh
-	- sudo update-rc.d firewall.sh defaults 20
-	- iptables -n -L -v --line-numbers
+4) FERMER LES FENÊTRES DU FIREWALL
+	- Télécharger le script firewall.sh pour gérer son pare-feu comme un service et initialiser les règles :
+		$ sudo wget --no-check-certificate -O /etc/init.d/firewall https://raw.github.com/benwend/serveurs/master/firewall.sh
+	- Ajouter les droits pour être exécutable :
+		$ sudo chmod a+x /etc/init.d/firewall
+	- Ajouter le script dans l'init pour être activé au démarrage :
+		$ sudo update-rc.d firewall defaults 20
+	- Vérifier les règles du pare-feu et leur bonne exécution :
+		$ iptables -n -L -v --line-numbers
 
-5) Prendre soin de ses fondations en tenant son système à jour
-	- sudo apt-get install cron-apt
-	- sudo nano /etc/cron-apt/config
+
+5) PRENDRE SOIN DE SES FONDATIONS EN TENANT SON SYSTÈME À JOUR
+	- Installer le logiciel cron-apt pour qu'il nous informe des nouvelles mises à jours :
+		$ sudo apt-get install cron-apt
+	- Éditer le fichier /etc/cron-apt/config :
 		MAILTO="contact@benjamin-wendling.fr"
 
-6) Surveiller le tout avec Logwatch
-	- sudo apt-get install logwatch
-	- /usr/sbin/logwatch --output mail --mailto contact@benjamin-wendling.fr --detail high
-	- ls -l /etc/cron.daily/ | grep logwatch
 
-7) Se prémunir contre les intrusions
-	- Bloquer en temps réel la plupart des scans de port connus :
-		_ Installer Porsentry :
-			apt-get install portsentry
-		_ Configurer Portsentry (nano /etc/portsentry/portsentry.conf) :
-			Commentez les lignes KILL_HOSTS_DENY.
-			Décommentez la ligne KILL_ROUTE="/sbin/iptables -I INPUT -s $TARGET$ -j DROP".
-			Ainsi, Portsentry ajoutera une règle dans le firewall (iptables) pour rejeter les paquets en cas de scans.
-		_ Lancer le logiciel par 2 fois pour les protocoles TCP et UDP :
-			portsentry –audp
-			portsentry –atcp
-	- Bloquer les rootkits et backdoors :
-		_ Installer Rkhunter :
-			apt-get install rkhunter
-		_ Configurer Rkhunter (nano /etc/default/rkhunter) :
-			REPORT_EMAIL : indiquez un mail pour recevoir des alertes de Rkhunter ;
-			CRON_DAILY_RUN : mettez « yes » pour une vérification quotidienne de votre machine via un cron.
+6) SURVEILLER LE TOUT AVEC LOGWATCH
+	- Le logiciel LogWatch synthétise les logs et envoye des rapports par email :
+		$ sudo apt-get install logwatch
+	- Exécuter le logiciel avec votre adresse email
+		$ sudo /usr/sbin/logwatch --output mail --mailto your@address.mail --detail high
+	- Vérifier qu'il s'est bien ajouté dans le cron :
+		$ ls -l /etc/cron.daily/ | grep logwatch
 
-8) Trucs & Astuces
+
+7) SE PRÉMUNIR CONTRE LES INTRUSIONS
+	- Bloquer en temps réel la plupart des scans de port connus grâce au logiciel Porsentry :
+		$ sudo apt-get install portsentry
+	- Éditer le fichier /etc/portsentry/portsentry.conf :
+		Commentez les lignes KILL_HOSTS_DENY.
+		Décommentez la ligne KILL_ROUTE="/sbin/iptables -I INPUT -s $TARGET$ -j DROP"
+			-> Ainsi, Portsentry ajoutera une règle dans le firewall (iptables) pour rejeter les paquets en cas de scans.
+	- Exécuter Porsentry par 2 fois pour les protocoles TCP et UDP :
+		$ sudo portsentry –audp
+		$ sudo portsentry –atcp
+	- Bloquer les rootkits et backdoors via le logiciel Rkhunter, mais attention risque de faux positifs. Si vous n'êtes pas sûr de vous, ne l'installer pas :
+		$ sudo apt-get install rkhunter
+	- Éditer le fichier /etc/default/rkhunter :
+		REPORT_EMAIL="your@address.mail"
+		CRON_DAILY_RUN="yes"
+	- Vérifier son bon fonctionnement :
+		$ ls -l /etc/cron.daily/ | grep rkhunter
+
+
+8) TRUCS & ASTUCES
 	- Apache2 :
-		_ nano /etc/apache2/apache2.conf
+		_ Éditer le fichier /etc/apache2/apache2.conf :
 			ServerSignature=off
 			ServerTokens=prod
 	- MySQL :
-		_ /usr/bin/mysql_secure_installation
+		_ Exécuter le script mysql_secure_installation qui vous aiderez à sécuriser un minimum MySQL :
+			$ sudo /usr/bin/mysql_secure_installation
 	- FTP :
-		_ Ne surtout pas créer de FTP anonymes
+		_ Ne surtout pas créer de FTP anonymes !
 	- Mail :
-		_ SpamAssassin
-		_ Connexion sécurisées SSl ou TLS
+		_ Installer SpamAssassin pour épurer votre boite mail :
+			$ ...
+		_ Connexions sécurisées via SSl ou TLS :
+			$ ...
 
-9) Tester la sécurité du serveur
-	- Voir les ports ouverts :
-		# netstat -lapute
-	- Scan de ports :
-		_ Avec nmap :
-			# nmap -v -A IP_Serveur
-	- Scan de vulnérabilité :
-		_ Avec OpenVAS :
 
+9) TESTER LA SÉCURITÉ DU SERVEUR
+	- Voir les ports ouverts via la commande Netstat :
+		$ sudo netstat -lapute
+	- Scan de ports via l'excellent Nmap :
+		$ sudo nmap -v -A IP_Serveur
+	- Scan de vulnérabilité, pour tester les principales failles des services ouvert via OpenVAS :
+		$ ...
