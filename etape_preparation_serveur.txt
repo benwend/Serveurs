@@ -107,16 +107,13 @@
 		_ Éditer le fichier /etc/apache2/apache2.conf :
 			ServerSignature=off
 			ServerTokens=prod
+		_ Ajouter règles dans Fail2ban et Iptables
 	- MySQL :
 		_ Exécuter le script mysql_secure_installation qui vous aiderez à sécuriser un minimum MySQL :
 			$ sudo /usr/bin/mysql_secure_installation
 	- FTP :
 		_ Ne surtout pas créer de FTP anonymes !
-	- Mail :
-		_ Installer SpamAssassin pour épurer votre boite mail :
-			$ ...
-		_ Connexions sécurisées via SSl ou TLS :
-			$ ...
+		_ Ajouter règles dans Fail2ban et Iptables
 
 
 11) TESTER LA SÉCURITÉ DU SERVEUR
@@ -126,3 +123,11 @@
 		$ sudo nmap -v -A IP_Serveur
 	- Scan de vulnérabilité, pour tester les principales failles des services ouvert via OpenVAS :
 		$ ...
+
+12) SERVEUR DE MESSAGERIE (Part II)
+	- Reception des emails et connexions sécurisées via SSL/TLS:
+		...
+	- Installation de ClamAV :
+		$ sudo apt-get install clamav
+	- Anti-Spam via SpamAssassin :
+		...
