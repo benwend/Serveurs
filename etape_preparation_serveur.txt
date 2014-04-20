@@ -30,19 +30,13 @@
 	- Installer Fail2ban :
 		$ sudo apt-get-install fail2ban
 	- Installer un MTA pour que Fail2Ban puisse envoyer des rapports
-	- Éditer /etc/fail2ban/jail.conf :
-		mta = yourMTA
-		destemail = your@address.mail
-		[ssh]
-		enabled = true
-		port = ssh
-		filter = sshd
-		action = iptables[name=SSH, port=ssh, protocol=tcp]
-		logpath = /var/log/auth.log
-		maxretry = 3
-		bantime = 300
+	- Copier le fichier jail.local (évitera à votre fichier d'être modifier à chaque mise à jour) :
+		$ sudo wget --no-check-certificate -O /etc/fail2ban/jail.local https://raw.github.com/benwend/serveurs/master/jail.local
+	- Copier les filtres apache-w00tw00t.conf et http-get-dos.conf si vous avez un serveur web.
 	- Relancer le service Fail2ban :
 		$ sudo service fail2ban restart
+	- Vérifier si les prisons ont été correctement lancées :
+		$ sudo fail2ban-client status
 
 
 4) FERMER LES FENÊTRES DU FIREWALL
