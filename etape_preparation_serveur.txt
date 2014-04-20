@@ -25,8 +25,25 @@
 	- Relancer le service SSH :
 		$ sudo service ssh restart
 
+
+3) GESTION DU TEMPS
+	- Gestion de l'horloge via le protocol NTP. Les OS récents embarquent un mécanisme pour configurer automatiquement leur horloge. Donc à faire si vous avez des problèmes d'horloge ou si votre machine est isolé ou filtrée lors de leur accès internet :
+		$ sudo apt-get install ntp ntpdate
+	- Puis si vous avez un accès internet :
+		$ sudo ntpdate-debian
+	- Si vous n'avez pas d'accès internet, appelé l'horloge parlante et configurer via la commande :
+		$ sudo date -s hh:mm:ss
+
+
+4) SERVEUR DE MESSAGERIE (Part I)
+	- Afin de pouvoir au moins envoyer des emails/notification de sécurité sur sa boite mail principal, il faut configurer son MUA.
+	- Nous utiliserons exim4 :
+		$ sudo apt-get install exim4
+	- Puis pour la configuration, nous exécuterons le script :
+		$ sudo dpkg-reconfigure exim4-config
+
 			
-3) CONTRÔLER LES ENTRÉES AVEC FAIL2BAN
+5) CONTRÔLER LES ENTRÉES AVEC FAIL2BAN
 	- Installer Fail2ban :
 		$ sudo apt-get-install fail2ban
 	- Installer un MTA pour que Fail2Ban puisse envoyer des rapports
@@ -39,7 +56,7 @@
 		$ sudo fail2ban-client status
 
 
-4) FERMER LES FENÊTRES DU FIREWALL
+6) FERMER LES FENÊTRES DU FIREWALL
 	- Télécharger le script firewall.sh pour gérer son pare-feu comme un service et initialiser les règles :
 		$ sudo wget --no-check-certificate -O /etc/init.d/firewall https://raw.github.com/benwend/serveurs/master/firewall.sh
 	- Ajouter les droits pour être exécutable :
@@ -50,14 +67,14 @@
 		$ iptables -n -L -v --line-numbers
 
 
-5) PRENDRE SOIN DE SES FONDATIONS EN TENANT SON SYSTÈME À JOUR
+7) PRENDRE SOIN DE SES FONDATIONS EN TENANT SON SYSTÈME À JOUR
 	- Installer le logiciel cron-apt pour qu'il nous informe des nouvelles mises à jours :
 		$ sudo apt-get install cron-apt
 	- Éditer le fichier /etc/cron-apt/config :
 		MAILTO="contact@benjamin-wendling.fr"
 
 
-6) SURVEILLER LE TOUT AVEC LOGWATCH
+8) SURVEILLER LE TOUT AVEC LOGWATCH
 	- Le logiciel LogWatch synthétise les logs et envoye des rapports par email :
 		$ sudo apt-get install logwatch
 	- Exécuter le logiciel avec votre adresse email
@@ -66,7 +83,7 @@
 		$ ls -l /etc/cron.daily/ | grep logwatch
 
 
-7) SE PRÉMUNIR CONTRE LES INTRUSIONS
+9) SE PRÉMUNIR CONTRE LES INTRUSIONS
 	- Bloquer en temps réel la plupart des scans de port connus grâce au logiciel Porsentry :
 		$ sudo apt-get install portsentry
 	- Éditer le fichier /etc/portsentry/portsentry.conf :
@@ -85,7 +102,7 @@
 		$ ls -l /etc/cron.daily/ | grep rkhunter
 
 
-8) TRUCS & ASTUCES
+10) TRUCS & ASTUCES
 	- Apache2 :
 		_ Éditer le fichier /etc/apache2/apache2.conf :
 			ServerSignature=off
@@ -102,7 +119,7 @@
 			$ ...
 
 
-9) TESTER LA SÉCURITÉ DU SERVEUR
+11) TESTER LA SÉCURITÉ DU SERVEUR
 	- Voir les ports ouverts via la commande Netstat :
 		$ sudo netstat -lapute
 	- Scan de ports via l'excellent Nmap :
