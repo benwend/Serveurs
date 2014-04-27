@@ -103,16 +103,26 @@ iptables -A FORWARD -p udp -m limit --limit 1/second -j ACCEPT
 iptables -A FORWARD -p icmp --icmp-type echo-request -m limit --limit 1/second -j ACCEPT
 # Contre le scan de port
 iptables -A FORWARD -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/second -j ACCEPT
+
 # Other network protections
 # (some will only work with some kernel versions)
-echo 1 > /proc/sys/net/ipv4/tcp_syncookies
 echo 0 > /proc/sys/net/ipv4/ip_forward
+# Against Smurf Attack
 echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+# Against Log Martians
 echo 1 > /proc/sys/net/ipv4/conf/all/log_martians
+# No log of Bad error messages
 echo 1 > /proc/sys/net/ipv4/icmp_ignore_bogus_error_responses
-echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter
-echo 0 > /proc/sys/net/ipv4/conf/all/send_redirects
+# Against Source routing
 echo 0 > /proc/sys/net/ipv4/conf/all/accept_source_route
+# Against Syn Flood
+echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+echo 1024 > /proc/sys/net/ipv4/tcp_max_syn_backlog
+echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter
+# Against Redirecting ICMP
+echo 0 > /proc/sys/net/ipv4/conf/all/send_redirects
+echo 0 > /proc/sys/net/ipv4/conf/all/accept_redirects
+echo 0 > /proc/sys/net/ipv4/conf/all/secure_redirects
 
 }
 
