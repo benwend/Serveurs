@@ -24,7 +24,7 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 # Services that the system will offer to the network
-TCP_SERVICES="22" # SSH only
+TCP_SERVICES="80" # SSH only
 UDP_SERVICES=""
 # Services the system will use from the network
 REMOTE_TCP_SERVICES="25 80 443" # web browsing
