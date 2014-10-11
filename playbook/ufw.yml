@@ -1,0 +1,13 @@
+---
+# Playbook qui permet d'installer la commande ufw
+# Installation sur tous les serveurs
+#
+- hosts: all
+
+  user: administrateur
+  sudo: yes
+
+  tasks:
+    - name:   Installation de UFW sur-couche de iptables et ainsi facilité la gestion du pare-feu
+      action: apt name=ufw state=installed
+      tags:   ufw

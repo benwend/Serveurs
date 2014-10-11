@@ -1,0 +1,16 @@
+# http://www.ansibleworks.com/docs/patterns.html
+# Serveur perso
+awacs	ansible_connection=local	ansible_ssh_host=127.0.0.1	ansible_ssh_user=*	#ansible_ssh_port=*
+
+# Serveur dédié
+ovh		ansible_connection=ssh		ansible_ssh_host=*.*.*.*	ansible_ssh_user=*	#ansible_ssh_port=*
+
+# Serveur Web
+[web]
+awacs
+ovh
+
+# Base de données
+[bdd]
+awacs
+ovh

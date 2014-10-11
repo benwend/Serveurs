@@ -1,0 +1,23 @@
+---
+#Playbook qui permet d'installer GitLab
+- hosts: ovh
+
+  vars:
+    deps: "build-essential zlib1g-dev libyaml-dev libssl-dev libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl git-core openssh-server redis-server checkinstall libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev"
+
+  tasks:
+    - name:   Installation des dependances pour GitLab
+      action: apt name=$deps state=installed
+      tags:   deps_gitlab
+
+    - name:   Installation de python 2.7
+      action: apt name=python2.7 state=installed
+      tags:   python2
+
+    - name:   Installation d'outils python pour supporter le markup
+      action: apt name=python-docutils state=installed
+      tags:   python2utils
+
+    - name:   Installation d'outils python pour supporter le markup
+      action: apt name=postfix state=installed
+      tags:   postfix

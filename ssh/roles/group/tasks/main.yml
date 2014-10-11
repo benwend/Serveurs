@@ -1,0 +1,7 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Configure ssh file
+  copy: src=ssh.conf dest=/etc/ssh/sshd_config owner=root group=root mode=0644
+  tags: ssh
+  notify: restart ssh
