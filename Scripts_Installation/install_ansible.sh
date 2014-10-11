@@ -18,9 +18,9 @@ ANSIBLE="${DIRECTORY}/.ansible"
 SOURCE="${ANSIBLE}/hacking/env-setup"
 MODULE="${DIRECTORY}/ansible"
 HOSTS="${MODULE}/hosts"
-GITNAME="benwend"
-GITEMAIL="benjamin.wend+git@gmail.com"
-GITKEY="$DIRECTORY/.ssh/gitsrv"
+GITNAME="VotreNom"
+GITEMAIL="VotreEmail"
+GITKEY="$DIRECTORY/.ssh/VotreCle"
 #
 #
 ###
