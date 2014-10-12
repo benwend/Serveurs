@@ -1,0 +1,122 @@
+#############################################
+#											#
+#		COMPILATION & SÉCURISATION 			#
+#			  D'UN NOYAU LINUX				#
+#											#
+#		  via le patch GRSecurity			#
+#											#
+#############################################
+
+
+###########
+## INFOS
+# Date : 12/10/2014
+# Patch : GRSecurity
+# Audit : paxtest
+#
+
+
+############
+## RÉSUMÉ
+##
+	Sécurisation du serveur à l'aide du patch de sécurité GRSecurity, appliqué à la compilation du noyau.
+	Le travail se fera aussi sous l'uid root. Nous prendrerons comme version du noyau, la 2.6.32.61.
+	Un patch correspond à un noyau en particulier. Tous les noyau Linux n'ont pas forcément un patch.
+#
+
+
+############
+## ÉTAPES
+##
+1)	Création d'un répertoire de travail.
+		$ mkdir /tmp/kernel && cd /tmp/kernel
+
+2)	Téléchargement des sources à partir du site web officiel.
+		Sources du noyau sur https://www.kernel.org :
+			$ wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.21.tar.xz
+		Test intégrité des sources :
+			$ wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.21.tar.sign
+			$ gpg --keyserver hkp://keys.gnupg.net --recv-keys 6092693E
+			$ gpg --verify linux-3.14.21.tar.sign
+		Extraction des sources :
+			$ tar Jvxf linux-3.14.21.tar.xz		
+
+3)	Téléchargement du patch GRSecurity
+		Sources du patch sur le site
+			$ wget https://grsecurity.net/stable/grsecurity-3.0-3.14.21-201410092055.patch
+			$ cd linux-3.14.21
+			$ patch -p1 < ../grsecurity-3.0-3.14.21-201410092055.patch
+
+4)	Définition d'une nouvelle config
+		Installation des paquets nécessaires :
+			$ sudo apt-get install libncurses5-dev
+		Importer tout d'abord le fichier de config de votre noyau actuel :
+			$ cp /boot/config-3.14.21-xxxx-grspax-ipv6-64 .config
+			$ wget ftp://ftp.ovh.net/made-in-ovh/bzImage/3.14.21/config-3.14.21-xxxx-grspax-ipv6-64 && mv config-3.14.21-xxxx-grspax-ipv6-64 .config
+			ou si compiler avec le pseudo filesystem
+			$ zcat /proc/config.gz > .config
+		Prise en compte de votre config actuelle :
+			$ make oldconfig
+		Modifier la future config :
+			$ make menuconfig
+
+5)	OPTIONS
+
+6)	Génération du noyau
+		1. Méthode standard
+			Vérification des outils via le compte root : 
+				gcc --version
+				make --version
+				ld -v	(paquet bintuils)
+				fdformat --version	(paquet util-linux)
+				depmod -V	(paquet module-init-tools)
+				tune2fs	(paquet e2fsprogs)
+				fsck.jfs -V (paquet jfsutils)
+				reiserfsck -V 	(paquet reiserfsprogs)
+				xfs_db -V	(paquet xfsprogs)
+				quota -v	(paquet quota ou quotatool)
+				pppd --version	(paquet ppp)
+				isdnctrl ???
+				shownmount --version	(paquet nfs-common)
+				ps --version	(paquet procps)
+				oprofiled --version	(paquet oprofile)
+			$ sudo make scripts
+			$ export NBCOEUR=$(($(cat /proc/cpuinfo | grep processor | wc -l)+1))
+			$ echo $NBCOEUR
+			$ sudo make --jobs=$(($NBCOEUR+1)) --load-average=$NBCOEUR
+			$ sudo make install
+		2. Méthode Debian
+			$ sudo apt-get install kernel-package bin86
+			$ make-kpkg --append-to-version -perso --initrd buildpackage
+			$ ls -al *perso*
+			$ sudo dpkg -i *perso*
+
+8)	Reconfiguration du Grub
+		# update-grub2
+
+9) Analyse et teste du nouveau noyau, résultant d'un build
+		Teste des fichiers :
+			$ file vmlinux
+			$ file arch/boot/x86/bzImage
+		Installation des paquets nécessaires :
+			$ sudo apt-get install qemu-system qemu-utils
+		Création d'une image basique :
+			$ qemu-img create -f raw rootfs.ext4 800M
+			$ mkfs.ext4 -F rootfs.ext4
+			$ sudo mkdir -p /mnt/rootfs
+			$ sudo mount -o loop rootfs.ext4 /mnt/rootfs
+			$ sudo debootstrap --arch i386 precise /mnt/rootfs http://us.Archive.ubuntu.com/ubuntu/
+		Ajout des modules dynamiques du dernier build
+			$ sudo make INSTALL_MOD_PATH=/mnt/rootfs/ modules_install
+			$ tree /mnt/rootfs/lib/modules
+
+9)	Vérification du démarrage du bon noyau.
+		# uname -a
+		# ps auxw
+
+10)	Audit de sécurité du noyau à l'aide du programme Paxtest.
+		# cd; wget http://grsecurity.net/~spender/paxtest-0.9.11.tar.gz
+		# tar -zxvf paxtest-0.9.11.tar.gz
+		# cd paxtest-0.9.11
+		# make linux
+		# ./paxtest [kiddie|blackhat]
