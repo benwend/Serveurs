@@ -9,21 +9,30 @@
 
 # APTCommande :
 # peut-être aptitude comme apt-get
-APTCOMMAND=/usr/bin/aptitude
+APTCOMMAND=/usr/bin/apt-get
 
-# Mailto :
-# peut-être le nom d'utilisateur, puis lire dans /var/mail
-# ou une adresse email à condition d'avoir un serveur SMTP
+# The email address to send mail to or a user.
 #MAILTO="root"
 MAILTO="courriel"
 
-# Mailon :
-#
+# Mailton :
+# Fréquence envoie mail
+# Value: error   (send mail on error runs)
+#        upgrade (when packages is upgraded)
+#        changes (mail when change in output from an action)
+#        output  (send mail when output is generated)
+#        always  (always send mail)
+#                (else never send mail)
 MAILON="changes" # Au début pour la mise au point
-#MAILON="upgrade"
 
 # Syslogin :
-# Fréquence des notifications (?)
+# Fréquence notification Syslog
+# Value: error   (send mail on error runs)
+#        upgrade (when packages is upgraded)
+#        changes (mail when change in output from an action)
+#        output  (send mail when output is generated)
+#        always  (always send mail)
+#                (else never send mail)
 SYSLOGON="always"
 
 # Mailmsgdir :
