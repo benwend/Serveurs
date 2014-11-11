@@ -94,7 +94,8 @@
 	- Vérifier qu'il s'est bien ajouté dans le cron :
 		$ ls -l /etc/cron.daily/ | grep logwatch
 	- Modifier le fichier /etc/cron.daily/00logwatch :
-		/usr/sbin/logwatch [--output mail] --mailto address@a.com
+		/usr/sbin/logwatch --output mail --mailto address@a.com
+	- Modifier /usr/share/logwatch/default.conf/logwatch.conf
 
 
 9) SE PRÉMUNIR CONTRE LES INTRUSIONS
