@@ -1,0 +1,25 @@
+## CONF-type files
+##
+## /usr/share/nano/conf.nanorc
+##
+
+
+## Generic *.conf file syntax highlighting
+syntax "conf" "\.(c(onf|nf|fg))$"
+
+## String
+icolor yellow ""(\\.|[^"])*""
+
+## Variable name & value
+icolor brightyellow start="=" end="$"
+icolor magenta start="(^|[[:space:]])[0-9a-z-]" end="="
+
+## Bracket/parenthesis
+icolor brightred "(^|[[:space:]])((\[|\()[0-9a-z_!@#$%^&*-]+(\]|\)))"
+
+## Number
+color green "[[:space:]][0-9.KM]+"
+
+## Comment
+color cyan start="(^|[[:space:]])(#|;).*$" end="$"
+color brightblue "(^|[[:space:]])(#|;)"

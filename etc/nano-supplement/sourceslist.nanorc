@@ -1,0 +1,28 @@
+## SOURCESLIST-type files
+##
+## /usr/share/nano/ini.nanorc
+##
+
+
+## Syntax highlighting for /etc/apt/sources.list
+syntax "apt/sources.list" "sources\.list(\.old|~)?$"
+
+## Component
+color brightmagenta "^deb(-src)? ((http|file|ftp):/[^ ]+|cdrom:\[[^\]]+\]/|cdrom:\[[a-zA-Z0-9\._-\(\) ]+\]/) [^ ]+ .+$"
+
+## Distribution
+color brightred "^deb(-src)? ((http|file|ftp):/[^ ]+|cdrom:\[[^\]]+\]/|cdrom:\[[a-zA-Z0-9\._-\(\) ]+\]/) [^ ]+"
+
+## URI
+color brightgreen "(http|file|ftp):/[^ ]+"
+
+## CD-roms
+## [^\]] does not work…
+color brightgreen "cdrom:\[[a-zA-Z0-9\._-\(\) ]+\]/"
+
+## deb / deb-src
+color cyan "^deb"
+color brightblue "^deb-src"
+
+## Comments
+color brightyellow "#.*"
