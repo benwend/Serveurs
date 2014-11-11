@@ -7,12 +7,19 @@
 *	http://blog.nicolargo.com/2013/03/mes-5-premieres-minutes-sur-un-serveur-debian.html
 * 	http://fr.openclassrooms.com/informatique/cours/securiser-son-serveur-linux
 *	http://blog.nicolargo.com/2013/06/ma-methode-pour-gerer-les-regles-iptables.html
+*	http://www.isalo.org/wiki.debian-fr/Configuration_d%27un_serveur_mail_avec_Postfix
 *														*
 *********************************************************
 
 1) CRÉATION DE COMPTE
 	- Ne pas utiliser le compte root
 	- Créer un compte qui se connectera avec sudo
+	- Ajouter ce compte dans sudo
+
+	http://doc.ubuntu-fr.org/sudoers
+	Installer le package sudo : # apt-get install sudo
+	Choix de l'éditeur favoris :# update-alternatives --config editor
+	Modification du sudoer :	# visudo
 
 
 2) CONNEXION À DISTANCE VIA SSH
@@ -20,6 +27,7 @@
 	- Pousser la clé publique sur le serveur distant :
 		$ ssh-copy-id user@monserveur
 	- Éditer etc/ssh/sshd_config :
+		_ Changer de port SSH pour diminuer les attaques -> Port : ?
 		_ Désactiver la connexion pour root -> PermitRootLogin no
 		_ Désactiver l'authentification par mot de passe -> PasswordAuthentication no
 	- Relancer le service SSH :
@@ -35,17 +43,21 @@
 		$ sudo date -s hh:mm:ss
 
 
-4) SERVEUR DE MESSAGERIE (Part I)
+4) SERVEUR DE MESSAGERIE (Part I : Installation de sSMTP)
+	http://wiki.ouieuhtoutca.org/doku.php?id=ssmtp
+	
+
+4) SERVEUR DE MESSAGERIE (Part I : Installation de base avec Postfix)
 	- Afin de pouvoir au moins envoyer des emails/notification de sécurité sur sa boite mail principal, il faut configurer son MUA.
-	- Nous utiliserons exim4 :
-		$ sudo apt-get install exim4
+	- Nous utiliserons postfix :
+		$ sudo apt-get install postfix
 	- Puis pour la configuration, nous exécuterons le script :
-		$ sudo dpkg-reconfigure exim4-config
+		$ sudo dpkg-reconfigure postfix
 
 			
 5) CONTRÔLER LES ENTRÉES AVEC FAIL2BAN
 	- Installer Fail2ban :
-		$ sudo apt-get-install fail2ban
+		$ sudo apt-get install fail2ban
 	- Installer un MTA pour que Fail2Ban puisse envoyer des rapports
 	- Copier le fichier jail.local (évitera à votre fichier d'être modifier à chaque mise à jour) :
 		$ sudo wget --no-check-certificate -O /etc/fail2ban/jail.local https://raw.github.com/benwend/serveurs/master/jail.local
@@ -68,10 +80,10 @@
 
 
 7) PRENDRE SOIN DE SES FONDATIONS EN TENANT SON SYSTÈME À JOUR
+	http://wiki.ouieuhtoutca.org/doku.php?id=cron-apt
 	- Installer le logiciel cron-apt pour qu'il nous informe des nouvelles mises à jours :
 		$ sudo apt-get install cron-apt
-	- Éditer le fichier /etc/cron-apt/config :
-		MAILTO="contact@benjamin-wendling.fr"
+	- Éditer le fichier /etc/cron-apt/config
 
 
 8) SURVEILLER LE TOUT AVEC LOGWATCH
@@ -81,6 +93,8 @@
 		$ sudo /usr/sbin/logwatch --output mail --mailto your@address.mail --detail high
 	- Vérifier qu'il s'est bien ajouté dans le cron :
 		$ ls -l /etc/cron.daily/ | grep logwatch
+	- Modifier le fichier /etc/cron.daily/00logwatch :
+		/usr/sbin/logwatch [--output mail] --mailto address@a.com
 
 
 9) SE PRÉMUNIR CONTRE LES INTRUSIONS
