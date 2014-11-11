@@ -1,0 +1,41 @@
+# Configuration for cron-apt. For further information about the possible
+# Configuration settings see /usr/share/doc/cron-apt/README.gz.
+#
+# Il est possible de modifier leur de lancement du cron : /etc/cron.d/cron-apt
+#
+# Les fichiers 0_update, 3-download et 5-install sont à copier dans : /etc/cron-apt/mailmsg.d & /etc/cron-apt/syslogmsg.d
+#
+
+
+# APTCommande :
+# peut-être aptitude comme apt-get
+APTCOMMAND=/usr/bin/aptitude
+
+# Mailto :
+# peut-être le nom d'utilisateur, puis lire dans /var/mail
+# ou une adresse email à condition d'avoir un serveur SMTP
+#MAILTO="root"
+MAILTO="courriel"
+
+# Mailon :
+#
+MAILON="changes" # Au début pour la mise au point
+#MAILON="upgrade"
+
+# Syslogin :
+# Fréquence des notifications (?)
+SYSLOGON="always"
+
+# Mailmsgdir :
+# Répertoire contenant le format du contenu
+# pour les courriels
+MAILMSGDIR="/etc/cron-apt/mailmsg.d"
+
+# Syslogmsgdir :
+# Répertoire contenant le format du contenu
+# pour les logs locaux
+SYSLOGMSGDIR="/etc/cron-apt/syslogmsg.d"
+
+# Option :
+# Sélection du fichier utilisé comme dépôt (celui qui ne contient que le dépôt sécurite)
+#OPTIONS="-o quiet=1 -o Dir::Etc::SourceList=/etc/apt/security.sources.list"
