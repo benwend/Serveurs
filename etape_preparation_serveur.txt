@@ -58,7 +58,6 @@
 5) CONTRÔLER LES ENTRÉES AVEC FAIL2BAN
 	- Installer Fail2ban :
 		$ sudo apt-get install fail2ban
-	- Installer un MTA pour que Fail2Ban puisse envoyer des rapports
 	- Copier le fichier jail.local (évitera à votre fichier d'être modifier à chaque mise à jour) :
 		$ sudo wget --no-check-certificate -O /etc/fail2ban/jail.local https://raw.github.com/benwend/serveurs/master/jail.local
 	- Copier les filtres apache-w00tw00t.conf et http-get-dos.conf si vous avez un serveur web.
@@ -93,9 +92,8 @@
 		$ sudo /usr/sbin/logwatch --output mail --mailto your@address.mail --detail high
 	- Vérifier qu'il s'est bien ajouté dans le cron :
 		$ ls -l /etc/cron.daily/ | grep logwatch
-	- Modifier le fichier /etc/cron.daily/00logwatch :
-		/usr/sbin/logwatch --output mail --mailto address@a.com
-	- Modifier /usr/share/logwatch/default.conf/logwatch.conf
+	- Modifier /usr/share/logwatch/default.conf/logwatch.conf :
+		Ajouter votre email dans Mailto= root votre_email
 
 
 9) SE PRÉMUNIR CONTRE LES INTRUSIONS
@@ -106,8 +104,9 @@
 		Décommentez la ligne KILL_ROUTE="/sbin/iptables -I INPUT -s $TARGET$ -j DROP"
 			-> Ainsi, Portsentry ajoutera une règle dans le firewall (iptables) pour rejeter les paquets en cas de scans.
 	- Exécuter Porsentry par 2 fois pour les protocoles TCP et UDP :
-		$ sudo portsentry –audp
-		$ sudo portsentry –atcp
+		$ sudo portsentry -audp
+		$ sudo portsentry -atcp
+	-----
 	- Bloquer les rootkits et backdoors via le logiciel Rkhunter, mais attention risque de faux positifs. Si vous n'êtes pas sûr de vous, ne l'installer pas :
 		$ sudo apt-get install rkhunter
 	- Éditer le fichier /etc/default/rkhunter :
