@@ -23,7 +23,7 @@ MAILTO="courriel"
 #        output  (send mail when output is generated)
 #        always  (always send mail)
 #                (else never send mail)
-MAILON="changes" # Au début pour la mise au point
+MAILON="upgrade" # Au début pour la mise au point
 
 # Syslogin :
 # Fréquence notification Syslog

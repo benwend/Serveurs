@@ -48,7 +48,7 @@
 	
 
 4) SERVEUR DE MESSAGERIE (Part I : Installation de base avec Postfix)
-	- Afin de pouvoir au moins envoyer des emails/notification de sécurité sur sa boite mail principal, il faut configurer son MUA.
+	http://www.isalo.org/wiki.debian-fr/Configuration_dun_serveur_mail_avec_Postfix
 	- Nous utiliserons postfix :
 		$ sudo apt-get install postfix
 	- Puis pour la configuration, nous exécuterons le script :
