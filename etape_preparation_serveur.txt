@@ -83,6 +83,11 @@
 	- Installer le logiciel cron-apt pour qu'il nous informe des nouvelles mises à jours :
 		$ sudo apt-get install cron-apt
 	- Éditer le fichier /etc/cron-apt/config
+		...
+	- Surveiller que les services utilisent bien les dernières versions des lib :
+		$ sudo apt-get install debian-goodies
+	- Puis exécuter la commande suivante :
+		$ sudo checkrestart -v
 
 
 8) SURVEILLER LE TOUT AVEC LOGWATCH

@@ -11,19 +11,22 @@
 ##
 ## Pour l'exécuter :
 ##  - Donner les droits d'exécution : $ chmod +x maj.sh
-##	- Déplacer dans le dossier /bin/ : $ mv maj.sh /bin/maj
+##	- Déplacer dans le dossier /bin/ : $ mv maj.sh /sbin/maj
 ##
 #####
 #!/bin/bash
 
-sudo apt-get update
+apt-get update
 echo -e "\n\tMise à jour des paquets effectués !\n"
 
-sudo apt-get dist-upgrade
+apt-get dist-upgrade
 echo -e "\n\tRecherche de mises à jour effectués !\n"
 
-sudo apt-get autoremove --purge
+apt-get autoremove --purge
 echo -e "\n\tSuppression des paquets obsolètes effectuées !\n"
 
-sudo apt-get autoclean
+apt-get autoclean
 echo -e "\n\tNettoyage du cache effectué !\n"
+
+# On vérifie que les lib mises à jour
+checkrestart -v
