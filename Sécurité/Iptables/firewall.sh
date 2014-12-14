@@ -85,6 +85,8 @@ fw_start () {
     /sbin/iptables -A INPUT -i eth0 -p icmp --source 176.31.181.251 -j ACCEPT # IP pour system de monitoring
     #
     # All other connections are registered in syslog
+    # Against Kernel error cheksum packets. Not using if you drop all packets no accepted by rules before.
+    # /sbin/iptables -A INPUT -m state --state INVALID -j DROP
     /sbin/iptables -P INPUT DROP
     /sbin/iptables -A INPUT -j LOG
     ## END Input traffic
