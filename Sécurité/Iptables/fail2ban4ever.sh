@@ -7,8 +7,9 @@
 # OS          : Debian
 # Requires    : iptables, fail2ban
 # Licence     : GPL
-# Version     : 0.0.6
-# Author      : Adrien Pujol <polux@crashdump.fr>
+# Version     : 0.0.7
+# Creator     : Adrien Pujol <polux@crashdump.fr>
+# Author      : Benjamin Wendling <ben_wend@hotmail.fr>
 # Web site    : http://www.crashdump.fr/
 #
 
@@ -128,8 +129,8 @@ bannir)
                  echo "+-IP: `color 32 "$BAD_IP"`(`get_hostname "$BAD_IP"`): `color 32 "$NBBAD_IP -> DEJA BANNIE"`";
              # Si c est supérieur au nombre choisi et non presente dans iptables, on peut lancer le choix
              elif [ `echo $NBBAD_IP` -ge `echo $NB_BEFOREBAN` ]
-             then    
-                
+             then
+
                  echo "+-IP: `color 31 "$BAD_IP"`(`get_hostname "$BAD_IP"`): `color 31 "$NBBAD_IP -> A BANNIR"`";
                  printf "+-----> Bannir définitivement IP (OUI/non):"
                  read CHOIX
@@ -153,9 +154,9 @@ bannir)
              # Sinon on affiche le nombre de fois quelle apparais
              else
                  echo "| IP: `color 33 "$BAD_IP"`(`get_hostname "$BAD_IP"`): `color 33 "$NBBAD_IP"`";
-             fi        
+             fi
          done
-    done 
+    done
 exit
 ;;
 
