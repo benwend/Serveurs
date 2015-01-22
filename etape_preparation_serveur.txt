@@ -54,12 +54,19 @@
 	- Puis pour la configuration, nous exécuterons le script :
 		$ sudo dpkg-reconfigure postfix
 
+4) SERVEUR DE MESSAGERIE (Part I : Installation de base avec exim4)
+	https://support.ikoula.com/index-1-2-122-2070-exim-mail-smtp-linux.html
+	- Nous utiliserons exim4 (installé par défaut sur Debian) :
+		$ sudo apt-get install exim4
+	- Puis pour la configuration, nous exécuterons le script :
+		$ sudo dpkg-reconfigure exim4-config
+
 			
 5) CONTRÔLER LES ENTRÉES AVEC FAIL2BAN
 	- Installer Fail2ban :
 		$ sudo apt-get install fail2ban
 	- Copier le fichier jail.local (évitera à votre fichier d'être modifier à chaque mise à jour) :
-		$ sudo wget --no-check-certificate -O /etc/fail2ban/jail.local https://raw.github.com/benwend/serveurs/master/jail.local
+		$ sudo wget --no-check-certificate -O /etc/fail2ban/jail.local https://raw.github.com/benwend/serveurs/master/Sécurité/fail2ban/jail.local
 	- Copier les filtres apache-w00tw00t.conf et http-get-dos.conf si vous avez un serveur web.
 	- Relancer le service Fail2ban :
 		$ sudo service fail2ban restart
@@ -69,7 +76,7 @@
 
 6) FERMER LES FENÊTRES DU FIREWALL
 	- Télécharger le script firewall.sh pour gérer son pare-feu comme un service et initialiser les règles :
-		$ sudo wget --no-check-certificate -O /etc/init.d/firewall https://raw.github.com/benwend/serveurs/master/firewall.sh
+		$ sudo wget --no-check-certificate -O /etc/init.d/firewall https://raw.githubusercontent.com/benwend/serveurs/master/Sécurité/Iptables/firewall.sh
 	- Ajouter les droits pour être exécutable :
 		$ sudo chmod a+x /etc/init.d/firewall
 	- Ajouter le script dans l'init pour être activé au démarrage :
@@ -83,7 +90,7 @@
 	- Installer le logiciel cron-apt pour qu'il nous informe des nouvelles mises à jours :
 		$ sudo apt-get install cron-apt
 	- Éditer le fichier /etc/cron-apt/config
-		...
+		Voir dans https://github.com/benwend/serveurs/tree/master/etc/cron-apt
 	- Surveiller que les services utilisent bien les dernières versions des lib :
 		$ sudo apt-get install debian-goodies
 	- Puis exécuter la commande suivante :
@@ -119,6 +126,10 @@
 		CRON_DAILY_RUN="yes"
 	- Vérifier son bon fonctionnement :
 		$ ls -l /etc/cron.daily/ | grep rkhunter
+	- Mettre à jour la base de données :
+		$ sudo rkhunter --propupd
+	- Lancer une vérification manuelle :
+		$ sudo rkhunter --checkall
 
 
 10) TRUCS & ASTUCES
@@ -150,3 +161,9 @@
 		$ sudo apt-get install clamav
 	- Anti-Spam via SpamAssassin :
 		...
+		
+13) SERVEUR (S)FTP(S)
+	- Avec VSFTPD :
+		- http://blog.moncoindunet.fr/linux/installer-et-configurer-vsftpd/
+	- Avec SSH :
+		- http://www.pointroot.org/index.php/2011/09/03/sftp-server-ftp-over-ssh-port-command/
