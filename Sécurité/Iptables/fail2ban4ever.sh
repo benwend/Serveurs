@@ -90,7 +90,7 @@ afficher)
         for NBBAD_IP in `grep -c $BAD_IP $FAIL2BANLOG`
         do
             # On vérifie quelle nest pas deja presente dans iptables
-            if [ "`echo $BAD_IP`" = "`iptables-save | grep -e "$BAD_IP" | cut -d " " -f4`" ]
+            if [ "`echo $BAD_IP`" = "`iptables-save | grep -e "$BAD_IP" | cut -d " " -f4 | cut -d "/" -f1`" ]
             then
                  echo "+-IP: `color 32 "$BAD_IP"`(`get_hostname "$BAD_IP"`): `color 32 "$NBBAD_IP -> DEJA BANNIE"`"
             # Sinon on affiche
@@ -123,7 +123,7 @@ bannir)
          for NBBAD_IP in `grep -c $BAD_IP $FAIL2BANLOG`
          do
              # On vérifie quelle nest pas deja presente dans iptables
-             if [ "`echo $BAD_IP`" = "`iptables-save | grep -e "$BAD_IP" | cut -d " " -f4`" ]
+             if [ "`echo $BAD_IP`" = "`iptables-save | grep -e "$BAD_IP" | cut -d " " -f4 | cut -d "/" -f1`" ]
              then
                  echo "+-IP: `color 32 "$BAD_IP"`(`get_hostname "$BAD_IP"`): `color 32 "$NBBAD_IP -> DEJA BANNIE"`";
              # Si c est supérieur au nombre choisi et non presente dans iptables, on peut lancer le choix
