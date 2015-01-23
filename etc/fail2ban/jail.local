@@ -19,7 +19,7 @@
 
 # "ignoreip" can be an IP address, a CIDR mask or a DNS host
 ignoreip = 127.0.0.1/8
-bantime  = 600
+bantime  = 3600
 maxretry = 3
 
 # "backend" specifies the backend used to get files modification. Available
@@ -71,7 +71,7 @@ action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(proto
 # Choose default action.  To change, just override value of 'action' with the
 # interpolation to the chosen action shortcut (e.g.  action_mw, action_mwl, etc) in jail.local
 # globally (section [DEFAULT]) or per specific section
-action = %(action_)s
+action = %(action_mwl)s
 
 #
 # JAILS
@@ -99,9 +99,6 @@ port     = ssh
 filter   = sshd
 action   = iptables[name=SSH, port=ssh, protocol=tcp]
 logpath  = /var/log/auth.log
-maxretry = 3
-bantime  = 900
-
 
 [ssh-ddos]
 
@@ -121,6 +118,13 @@ action = iptables[name=Apache-w00tw00t,port=80,protocol=tcp]
 logpath = /var/log/apache*/*access.log
 maxretry = 1
 
+[apache-phpmyadmin]
+
+enabled = true
+port = http,https
+filter = apache-phpmyadmin
+logpath = /var/log/apache2/error*.log
+maxretry = 2 
  
 [http-get-dos]
 # Protect against DOS attack
@@ -134,3 +138,7 @@ maxretry = 360
 findtime = 120
 action = iptables[name=HTTP, port=http, protocol=tcp]
 mail-whois-lines[name=%(__name__)s, dest=%(destemail)s, logpath=%(logpath)s]
+
+### Fin du fichier de config ###
+LC_ALL=C
+LANG=C
