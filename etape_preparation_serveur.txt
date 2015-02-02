@@ -124,6 +124,8 @@
 	- Éditer le fichier /etc/default/rkhunter :
 		REPORT_EMAIL="your@address.mail"
 		CRON_DAILY_RUN="yes"
+	- Éditer le fichier /etc/rkhunter.conf :
+		MAIL-ON-WARNING="your@address.mail"
 	- Vérifier son bon fonctionnement :
 		$ ls -l /etc/cron.daily/ | grep rkhunter
 	- Mettre à jour la base de données :
