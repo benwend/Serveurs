@@ -104,7 +104,7 @@
 		$ sudo /usr/sbin/logwatch --output mail --mailto your@address.mail --detail high
 	- Vérifier qu'il s'est bien ajouté dans le cron :
 		$ ls -l /etc/cron.daily/ | grep logwatch
-	- Modifier /usr/share/logwatch/default.conf/logwatch.conf :
+	- Modifier /usr/share/logwatch/default.conf/logwatch.conf ou /etc/logwatch/config/logwatch.conf :
 		Ajouter votre email dans Mailto= root votre_email
 
 
@@ -140,6 +140,9 @@
 			ServerSignature=off
 			ServerTokens=prod
 		_ Ajouter règles dans Fail2ban et Iptables
+		_ Activer mod_rewrite et désactiver mod_deflate (gzip compression) :
+			a2enmod rewrite
+			a2dismod deflate
 	- MySQL :
 		_ Exécuter le script mysql_secure_installation qui vous aiderez à sécuriser un minimum MySQL :
 			$ sudo /usr/bin/mysql_secure_installation
