@@ -153,7 +153,7 @@ maxretry = 1
 enabled = true
 port = http,https
 filter = apache-phpmyadmin
-logpath = /var/log/apache2/error*.log
+logpath = /var/log/apache*/*error.log
 maxretry = 2 
 
  
@@ -162,13 +162,12 @@ maxretry = 2
 # 360 requests in 2 min > Ban for 10 minutes => 3req/s
 
 enabled = true
-port = http,https
 filter = http-get-dos
-logpath = # Possible d'utiliser directement les log Apache ou Nginx
+port = http,https
+banaction= iptables-allports[name=HTTP-GET-DoS]
+logpath = /var/log/apache*/*.log
 maxretry = 360
 findtime = 120
-action = iptables[name=HTTP, port=http, protocol=tcp]
-mail-whois-lines[name=%(__name__)s, dest=%(destemail)s, logpath=%(logpath)s]
 
 
 ## Mail servers
