@@ -110,12 +110,42 @@ logpath  = /var/log/auth.log
 
 ## WEB SERVICE PROTECTION
 
+[apache]
+
+enabled  = true
+port     = http,https
+filter   = apache-auth
+logpath  = /var/log/apache*/*error.log
+
+[apache-noscript]
+
+enabled  = true
+port     = http,https
+filter   = apache-noscript
+logpath  = /var/log/apache*/*error.log
+
+[apache-overflows]
+
+enabled  = true
+port     = http,https
+filter   = apache-overflows
+logpath  = /var/log/apache*/*error.log
+
 [apache-w00tw00t]
 
-enabled = false
+enabled = true
 filter = apache-w00tw00t
 action = iptables[name=Apache-w00tw00t,port=80,protocol=tcp]
 logpath = /var/log/apache*/*access.log
+maxretry = 1
+
+[apache-pourcent]
+
+enabled  = true
+filter   = apache-pourcent
+port     = http,https
+banaction= iptables-allports[name=Apache-Pourcent]
+logpath  = /var/log/apache*/*access.log
 maxretry = 1
 
 [apache-phpmyadmin]
@@ -125,12 +155,13 @@ port = http,https
 filter = apache-phpmyadmin
 logpath = /var/log/apache2/error*.log
 maxretry = 2 
+
  
 [http-get-dos]
 # Protect against DOS attack
 # 360 requests in 2 min > Ban for 10 minutes => 3req/s
 
-enabled = false
+enabled = true
 port = http,https
 filter = http-get-dos
 logpath = # Possible d'utiliser directement les log Apache ou Nginx
@@ -139,6 +170,12 @@ findtime = 120
 action = iptables[name=HTTP, port=http, protocol=tcp]
 mail-whois-lines[name=%(__name__)s, dest=%(destemail)s, logpath=%(logpath)s]
 
-### Fin du fichier de config ###
-LC_ALL=C
-LANG=C
+
+## Mail servers
+
+[exim4]
+
+enabled  = true
+port     = smtp,ssmtp
+filter   = exim
+logpath  = /var/log/mail.log
