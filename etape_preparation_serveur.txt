@@ -66,7 +66,7 @@
 	- Installer Fail2ban :
 		$ sudo apt-get install fail2ban
 	- Copier le fichier jail.local (évitera à votre fichier d'être modifier à chaque mise à jour) :
-		$ sudo wget --no-check-certificate -O /etc/fail2ban/jail.local https://raw.github.com/benwend/serveurs/master/Sécurité/fail2ban/jail.local
+		$ sudo wget --no-check-certificate -O /etc/fail2ban/jail.local https://raw.githubusercontent.com/benwend/serveurs/master/etc/fail2ban/jail.local
 	- Copier les filtres apache-w00tw00t.conf et http-get-dos.conf si vous avez un serveur web.
 	- Relancer le service Fail2ban :
 		$ sudo service fail2ban restart
