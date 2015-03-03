@@ -128,12 +128,12 @@ maxretry = 2
  
 [http-get-dos]
 # Protect against DOS attack
-# 360 requests in 2 min > Ban for 10 minutes
+# 360 requests in 2 min > Ban for 10 minutes => 3req/s
 
 enabled = false
 port = http,https
 filter = http-get-dos
-logpath = /var/log/varnish/varnishncsa.log	# Possible d'utiliser directement les log Apache ou Nginx
+logpath = # Possible d'utiliser directement les log Apache ou Nginx
 maxretry = 360
 findtime = 120
 action = iptables[name=HTTP, port=http, protocol=tcp]
