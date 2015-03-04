@@ -102,10 +102,11 @@
 		$ sudo apt-get install logwatch
 	- Exécuter le logiciel avec votre adresse email
 		$ sudo /usr/sbin/logwatch --output mail --mailto your@address.mail --detail high
-	- Vérifier qu'il s'est bien ajouté dans le cron :
-		$ ls -l /etc/cron.daily/ | grep logwatch
+	- Modifier /etc/cron.daily/00logwatch :
+		Supprimer les options : --output mail --detail high
 	- Modifier /usr/share/logwatch/default.conf/logwatch.conf ou /etc/logwatch/config/logwatch.conf :
-		Ajouter votre email dans Mailto= root votre_email
+		Modifier : Output=text par Output=mail
+		Modifier : Mailto=root par Mailto=votre@email
 
 
 9) SE PRÉMUNIR CONTRE LES INTRUSIONS
