@@ -173,3 +173,8 @@
 		- http://blog.moncoindunet.fr/linux/installer-et-configurer-vsftpd/
 	- Avec SSH :
 		- http://www.pointroot.org/index.php/2011/09/03/sftp-server-ftp-over-ssh-port-command/
+
+14) MAN PAGES EN COULEURS
+    doc : https://www.crashdump.fr/debian/tips-man-pages-en-couleurs-812/
+    # apt-get install most
+    $ echo "export MANPAGER=\"/usr/bin/most -s\"" >> ~/.bashrc
