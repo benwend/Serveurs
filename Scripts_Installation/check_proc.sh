@@ -5,8 +5,7 @@
 # Benwend - 06/2015
 # GPLv3
 #
-# Syntaxe: # su - -c "./nginxautoinstall.sh"
-# Syntaxe: or # sudo ./nginxautoinstall.sh
+# Syntaxe: # ./check_proc.sh
 #
 VERSION="0.1"
 
@@ -34,8 +33,6 @@ echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 echo "1" > /proc/sys/net/ipv4/tcp_syncookies
 echo "1024" > /proc/sys/net/ipv4/tcp_max_syn_backlog
 echo "1" > /proc/sys/net/ipv4/conf/all/rp_filter
-
-echo "1" > /proc/sys/net/ipv4/conf/default/rp_filter
 
 # Redirects
 echo "0" > /proc/sys/net/ipv4/conf/default/accept_redirects
