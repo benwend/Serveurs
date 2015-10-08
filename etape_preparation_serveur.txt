@@ -1,15 +1,15 @@
-*********************************************************
-*														*
+*************************************************************************
+*									*
 *		5 premières minutes sur un serveur Debian		*
-*														*
-*********************************************************
-* Source : 												*
+*									*
+*************************************************************************
+* Source : 								*
 *	http://blog.nicolargo.com/2013/03/mes-5-premieres-minutes-sur-un-serveur-debian.html
 * 	http://fr.openclassrooms.com/informatique/cours/securiser-son-serveur-linux
 *	http://blog.nicolargo.com/2013/06/ma-methode-pour-gerer-les-regles-iptables.html
 *	http://www.isalo.org/wiki.debian-fr/Configuration_d%27un_serveur_mail_avec_Postfix
-*														*
-*********************************************************
+*									*
+*************************************************************************
 
 1) CRÉATION DE COMPTE
 	- Ne pas utiliser le compte root
@@ -42,17 +42,6 @@
 	- Si vous n'avez pas d'accès internet, appelé l'horloge parlante et configurer via la commande :
 		$ sudo date -s hh:mm:ss
 
-
-4) SERVEUR DE MESSAGERIE (Part I : Installation de sSMTP)
-	http://wiki.ouieuhtoutca.org/doku.php?id=ssmtp
-	
-
-4) SERVEUR DE MESSAGERIE (Part I : Installation de base avec Postfix)
-	http://www.isalo.org/wiki.debian-fr/Configuration_dun_serveur_mail_avec_Postfix
-	- Nous utiliserons postfix :
-		$ sudo apt-get install postfix
-	- Puis pour la configuration, nous exécuterons le script :
-		$ sudo dpkg-reconfigure postfix
 
 4) SERVEUR DE MESSAGERIE (Part I : Installation de base avec exim4)
 	https://support.ikoula.com/index-1-2-122-2070-exim-mail-smtp-linux.html
@@ -91,10 +80,12 @@
 		$ sudo apt-get install cron-apt
 	- Éditer le fichier /etc/cron-apt/config
 		Voir dans https://github.com/benwend/serveurs/tree/master/etc/cron-apt
-	- Surveiller que les services utilisent bien les dernières versions des lib :
-		$ sudo apt-get install debian-goodies
+	- Surveiller que les services utilisent bien les dernières versions des lib (needrestart pour debian 8) :
+		$ sudo apt-get install [debian-goodies|needrestart]
 	- Puis exécuter la commande suivante :
 		$ sudo checkrestart -v
+		ou
+		$ sudo needrestart
 
 
 8) SURVEILLER LE TOUT AVEC LOGWATCH
@@ -104,7 +95,9 @@
 		$ sudo /usr/sbin/logwatch --output mail --mailto your@address.mail --detail high
 	- Modifier /etc/cron.daily/00logwatch :
 		Supprimer les options : --output mail --detail high
-	- Modifier /usr/share/logwatch/default.conf/logwatch.conf ou /etc/logwatch/config/logwatch.conf :
+	- Copier le fichier de conf d'exemple dans etc :
+		$ sudo cp /usr/share/logwatch/default.conf/logwatch.conf /etc/logwatch/config/logwatch.conf
+	- Modifier logwatch.conf  :
 		Modifier : Output=text par Output=mail
 		Modifier : Mailto=root par Mailto=votre@email
 
@@ -132,7 +125,7 @@
 	- Mettre à jour la base de données :
 		$ sudo rkhunter --propupd
 	- Lancer une vérification manuelle :
-		$ sudo rkhunter --checkall
+		$ sudo rkhunter [--checkall|-c]
 
 
 10) TRUCS & ASTUCES
@@ -160,19 +153,6 @@
 	- Scan de vulnérabilité, pour tester les principales failles des services ouvert via OpenVAS :
 		$ ...
 
-12) SERVEUR DE MESSAGERIE (Part II)
-	- Reception des emails et connexions sécurisées via SSL/TLS:
-		...
-	- Installation de ClamAV :
-		$ sudo apt-get install clamav
-	- Anti-Spam via SpamAssassin :
-		...
-		
-13) SERVEUR (S)FTP(S)
-	- Avec VSFTPD :
-		- http://blog.moncoindunet.fr/linux/installer-et-configurer-vsftpd/
-	- Avec SSH :
-		- http://www.pointroot.org/index.php/2011/09/03/sftp-server-ftp-over-ssh-port-command/
 
 14) MAN PAGES EN COULEURS
     doc : https://www.crashdump.fr/debian/tips-man-pages-en-couleurs-812/
