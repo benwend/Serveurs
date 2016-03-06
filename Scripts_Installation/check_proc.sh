@@ -7,10 +7,11 @@
 #
 # Syntaxe: # ./check_proc.sh
 #
-VERSION="0.1"
+#VERSION="0.2"
 
 ##############################
 
+#########
 ### KERNEL
 # kernel.core_uses_pid
 echo "1" > /proc/sys/kernel/core_uses_pid
@@ -21,6 +22,7 @@ echo "1" > /proc/sys/kernel/kptr_restrict
 # kernel.sysrq
 echo "0" > /proc/sys/kernel/sysrq
 
+##########
 ### NETWORK
 ## IPv4
 # Smurf Attack
@@ -60,8 +62,10 @@ echo "0" > /proc/sys/net/ipv4/conf/all/accept_source_route
 echo "0" > /proc/sys/net/ipv4/tcp_timestamps
 
 # Send redirects
-echo "0" > /proc/sys/net/ipv4/conf/default/send_redirects
-echo "0" > /proc/sys/net/ipv4/conf/all/send_redirects
+echo "0" | tee /proc/sys/net/ipv4/conf/*/send_redirects
+
+#IP Forwarding
+echo "0" > /proc/sys/net/ipv4/conf/all/forwarding
 
 
 ## IPv6
@@ -72,3 +76,6 @@ echo "0" > /proc/sys/net/ipv6/conf/all/accept_redirects
 # Source Route
 echo "0" > /proc/sys/net/ipv6/conf/default/accept_source_route
 echo "0" > /proc/sys/net/ipv6/conf/all/accept_source_route
+
+# IP Forwarding
+echo "0" > /proc/sys/net/ipv6/conf/all/forwarding
