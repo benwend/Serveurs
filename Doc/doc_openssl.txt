@@ -1,0 +1,16 @@
+####
+# RSA
+#
+* Clé Privée :
+$ openssl genrsa 1024 > rsa_priv.pem
+$ openssl rsa -noout -text -in rsa_priv.pem
+
+* Chiffrer la clé privée :
+$ openssl rsa -aes128 -in rsa_priv.pem > rsa_priv.pem
+ ou
+* Création + chiffrement :
+$ openssl genrsa -aes128 1024 > rsa_priv.pem
+
+* Clé Public :
+$ openssl rsa -in gitsrv.key -pubout > gitsrv.pub
+$ openssl rsa -noout -text -pubin -in rsa_pub.pem
