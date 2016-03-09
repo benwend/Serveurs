@@ -1,8 +1,8 @@
-####
+######
 #
 # DOCUMENTATION SSL/TLS
 #
-####
+######
 #
 # Auteur  : benwend <ben_wend@hotmail.fr>
 # Date    : 09/03/2016
@@ -13,43 +13,62 @@
 #
 # Roadmap : - Let's encrypt sur Apache
 #
-####
+######
 
-1) Générer la clé privée :
+####
+# Certificat SSL/TLS via un mandataire
+#
+1) Générer & vérifier la clé privée :
         # openssl genrsa 2048 > FQDN.key
         # openssl rsa -in FQDN.key -check
 
-
-2) Générer la Requête de Signature de Certificat (ou CSR) :
+2) Générer & vérifier la Requête de Signature de Certificat :
+        - Algorithme de hash à utiliser : sha256
         # openssl req -new -sha256 -key FQDN.key -out FQDN.csr
-        ( Algorithme de chiffrement à utiliser : sha256 | FR - <REGION> - <VILLE> - <NAME or ORGANISATION> - <X> - <FQDN> - <COURRIEL_ADMIN>)
+	- Ordre des réponses à fournir dans la CSR : <PAYS> - <REGION> - <VILLE> - <NAME or ORGANISATION> - <X> - <FQDN> - <COURRIEL_ADMIN>
         # openssl req -text -noout -verify -in FQDN.csr
 
+3) Demander un certificat vérifié via la plateforme du mandataire :
+        - Choisir l'offre SSL
+        - Copier/Coller la CSR dans le formulaire en ligne
 
-3) Demander un certificat vérifié :
-        Choisir l'offre SSL
-        Copier/Coller la CSR dans le formulaire en ligne
-
-
-4) Télécharger le Certificat :
-        Après vérification par l'Autorité, création du certificat.
-        Télécharger le certificat depuis la page d'état et lui donner le nom de "FQDN.crt"
-        Tester le certificat :
+4) Télécharger & vérifier le Certificat :
+        - Après vérification par l'Autorité, création du certificat.
+        - Télécharger le certificat depuis la page d'état et lui donner le nom de "FQDN.crt"
         # openssl x509 -in FQDN.crt -text -noout
 
 
-5) Configurer Apache :
-        Installer le mod_ssl ou Apache SSL
-        Dans le fichier de conf du site compléter les varaibles suivantes :
+####
+# Let's Encrypt
+#
+1) Installation :
+	$ git clone https://github.com/letsencrypt/letsencrypt
+	$ cd letsencrypt
+	$ ./letsencrypt-auto --help
+
+2) Pour avoir l'aide :
+	Minimum :
+	$ ./letsencrypt-auto --help
+	Complet :
+	$ ./letsencrypt-auto --help all
+
+
+####
+# COMMUN
+#
+* Configurer Apache :
+        - Activer le module SSL d'Apache :
+	# a2enmod ssl
+        - Dans le fichier de conf du site compléter les variables suivantes :
+		(/etc/apache2/available/<SITE>)
                 SSLCACertificateFile : lien vers le fichier qui contient les Certificats racines (IntermediateCA.crt)
                 SSLCertificateFile : lien vers le certificat SSL (FQDN.crt)
                 SSLCertificateKeyFile : lien vers la clé privé (FQDN.key)
 
+* Tester puis redémarrer Apache :
+	# apachectl configtest
+        # systemctl restart apache2
 
-6) Redémarrer Apache :
-        $ sudo service apache2 restart
-
-
-7) Tester :
+* Tester le certificat et le serveur :
         https://ssltools.thawte.com/checker/views/certCheck.jsp
 	https://www.ssllabs.com/ssltest/
