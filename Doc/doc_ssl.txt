@@ -1,0 +1,55 @@
+####
+#
+# DOCUMENTATION SSL/TLS
+#
+####
+#
+# Auteur  : benwend <ben_wend@hotmail.fr>
+# Date    : 09/03/2016
+# Version : 0.2
+#
+# Résumé : Quelques consignes basiques sur l'installation d'un certificat SSL/TLS
+#          sur un serveur Apache.
+#
+# Roadmap : - Let's encrypt sur Apache
+#
+####
+
+1) Générer la clé privée :
+        # openssl genrsa 2048 > FQDN.key
+        # openssl rsa -in FQDN.key -check
+
+
+2) Générer la Requête de Signature de Certificat (ou CSR) :
+        # openssl req -new -sha256 -key FQDN.key -out FQDN.csr
+        ( Algorithme de chiffrement à utiliser : sha256 | FR - <REGION> - <VILLE> - <NAME or ORGANISATION> - <X> - <FQDN> - <COURRIEL_ADMIN>)
+        # openssl req -text -noout -verify -in FQDN.csr
+
+
+3) Demander un certificat vérifié :
+        Choisir l'offre SSL
+        Copier/Coller la CSR dans le formulaire en ligne
+
+
+4) Télécharger le Certificat :
+        Après vérification par l'Autorité, création du certificat.
+        Télécharger le certificat depuis la page d'état et lui donner le nom de "FQDN.crt"
+        Tester le certificat :
+        # openssl x509 -in FQDN.crt -text -noout
+
+
+5) Configurer Apache :
+        Installer le mod_ssl ou Apache SSL
+        Dans le fichier de conf du site compléter les varaibles suivantes :
+                SSLCACertificateFile : lien vers le fichier qui contient les Certificats racines (IntermediateCA.crt)
+                SSLCertificateFile : lien vers le certificat SSL (FQDN.crt)
+                SSLCertificateKeyFile : lien vers la clé privé (FQDN.key)
+
+
+6) Redémarrer Apache :
+        $ sudo service apache2 restart
+
+
+7) Tester :
+        https://ssltools.thawte.com/checker/views/certCheck.jsp
+	https://www.ssllabs.com/ssltest/
