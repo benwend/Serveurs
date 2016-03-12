@@ -15,6 +15,7 @@
 # 12/03/2016	benwend		Create 'install' function && add page ID (v0.2)
 # 12/03/2016	benwend		Test if the directory '/opt/openvas' exists (v0.3)
 # 12/03/2016	benwend		Fix bugs (v0.4)
+# 12/03/2016	benwend		DL CLI-1.4.2 : Bug sur Debian 8 avec 1.4.3
 ################################################################################
 
 SMBID="1975"
@@ -27,8 +28,10 @@ MANID="2295"
 MANAGER="openvas-manager-6.0.8"
 GSAID="2299"
 GSA="greenbone-security-assistant-6.0.10"
-CLID="2209"
-CLI="openvas-cli-1.4.3"
+
+# BUG de la 1.4.3 sur debian 8 
+CLID="2141"
+CLI="openvas-cli-1.4.2"
 
 DIR="/opt/openvas"
 
