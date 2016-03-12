@@ -50,7 +50,7 @@ function install() {
 	# Téléchargement/Décompression/Nettoyage des sources
 	if [ ! -f "$PK.tar.gz" ]; then
 		echo -e "\n* DOWNLOAD '$PK' :"
-		wget http://wald.intevation.org/frs/download.php/$SMBID/$SMB.tar.gz
+		wget http://wald.intevation.org/frs/download.php/$ID/$PK.tar.gz
 		echo -e "\n* Untar '$PK.tar.gz' :"
 		tar xzf $PK.tar.gz
 		echo -e "\n* Remove '$PK.tar.gz' :"
