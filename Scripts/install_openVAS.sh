@@ -7,11 +7,15 @@
 # Version : 0.5
 #
 ################################################################################
+#
 # DOC :
+#	lab_-_openvas.pdf
 #	http://www.openvas.org/install-source.html
 #	https://github.com/ChrisFernandez/openvas_install/blob/master/install_openvas.sh
-#	lab_-_openvas.pdf
+#	http://proturk.com/blog/install-openvas-8-on-debian-8-jessie/
+#
 ################################################################################
+#
 # 11/03/2016	benwend		Initial release (v0.1)
 # 12/03/2016	benwend		Create 'install' function && add page ID (v0.2)
 # 12/03/2016	benwend		Test if the directory '/opt/openvas' exists (v0.3)
@@ -20,6 +24,8 @@
 # 13/03/2016	benwend		Init OpenVAS (v0.5)
 # 14/03/2016	benwend		Add WMI lib
 # 14/03/2016	benwend		Fix many bugs
+# 14/03/2016	benwend		Test if the user is root
+#
 ################################################################################
 
 SMBID="1975"
@@ -38,18 +44,6 @@ CLI="openvas-cli-1.4.2"
 WMI="wmi-1.3.14"
 
 DIR="/opt/openvas"
-
-
-# test :
-# Testing return fct for continue or not
-#
-# Usage : test $? "my_fct"
-function test() {
-	if [ ! $1 = 0 ] then
-		echo -e "\n\n Error in '$2' !"
-		exit 1
-	fi
-}
 
 # install_wmi :
 # installation of lib wmi
@@ -142,45 +136,13 @@ function install() {
 	cd ../..
 }
 
-# template_install :
-# prepare() and install()
-#
-# Usage : template_install <version_package> <package>
-function template_install() {
-	ID=$1
-	PK=$2
+###
 
-	cd $DIR
-
-	# Téléchargement/Décompression/Nettoyage des sources
-	if [ ! -f "$PK.tar.gz" ]; then
-		echo -e "\n* DOWNLOADING '$PK'"
-		wget http://wald.intevation.org/frs/download.php/$ID/$PK.tar.gz
-		echo -e "\n* Untaring '$PK.tar.gz'"
-		tar xzf $PK.tar.gz
-		echo -e "\n* Removing '$PK.tar.gz'"
-		rm $PK.tar.gz
-  	fi
-
-	echo -e "\n* BUILDING $PK"
-	cd $PK
-
-	if [ -d "build" ]; then
-		echo -e "\n\t* Removing old build/ of '$PK'"
-		rm -rf build
-	fi
-
-	mkdir build && cd build
-
-	# Option -Wno-dev : Suppression des messages de debug pour les développeurs
-	cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=/opt/openvas -DCMAKE_BUILD_TYPE=RELEASE ..
-	make
-	make doc
-	make install
-	make rebuild_cache
-
-	cd ../..
-}
+uid=`id -u -n`
+if [ ! $uid = 0 ]; then
+	echo "Execute install_openvas.sh with root !"
+	exit 1
+fi
 
 ###
 
@@ -253,11 +215,17 @@ echo -e "\n* Sync NVT :"
 # Add option --wget if rsync is blocked by the FW
 openvas-nvt-sync
 
+sleep 600 # openvas-nvt-sync is launched in the background.
+
 echo -e "\n* Doing the ScapData Sync :"
-openvas-scapdata-sync && sleep 1800
+openvas-scapdata-sync
+
+sleep 600 # openvas-scapdata-sync is launched in the background.
 
 echo -e "\n* Doing the CertData Sync :"
-openvas-certdata-sync && sleep 120
+openvas-certdata-sync
+
+sleep 600 # openvas-certdata-sync is launched in the background.
 
 echo -e "\n* Starting the scanner :"
 openvassd
