@@ -3,7 +3,7 @@
 ################################################################################
 #
 # Author  : benwend <benjamin.wend+git@gmail.com>
-# Date    : 13/03/2016
+# Date    : 14/03/2016
 # Version : 0.5
 #
 ################################################################################
@@ -17,7 +17,9 @@
 # 12/03/2016	benwend		Test if the directory '/opt/openvas' exists (v0.3)
 # 12/03/2016	benwend		Fix bugs (v0.4)
 # 12/03/2016	benwend		DL CLI-1.4.2 : Bug sur Debian 8 avec 1.4.3
-# 13/03/2016	benwend		Init OpenVAS (In going -- v0.5)
+# 13/03/2016	benwend		Init OpenVAS (v0.5)
+# 14/03/2016	benwend		Add WMI lib
+# 14/03/2016	benwend		Fix many bugs
 ################################################################################
 
 SMBID="1975"
@@ -33,10 +35,118 @@ GSA="greenbone-security-assistant-6.0.10"
 # BUG de la 1.4.3 sur debian 8 
 CLID="2141"
 CLI="openvas-cli-1.4.2"
+WMI="wmi-1.3.14"
 
 DIR="/opt/openvas"
 
+
+# test :
+# Testing return fct for continue or not
+#
+# Usage : test $? "my_fct"
+function test() {
+	if [ ! $1 = 0 ] then
+		echo -e "\n\n Error in '$2' !"
+		exit 1
+	fi
+}
+
+# install_wmi :
+# installation of lib wmi
+#
+# Usage : install_wmi
+function install_wmi() {
+	cd $DIR
+
+	if [ ! -f "$WMI.tar.gz" ]; then
+		wget http://openvas.org/download/wmi/$WMI.tar.bz2
+		tar -xf $WMI.tar.bz2
+	fi
+
+	cd $WMI
+
+	if [ ! -f "openvas-$WMI.patch" ]; then
+		wget http://openvas.org/download/wmi/openvas-$WMI.patch
+		wget http://openvas.org/download/wmi/openvas-$WMI.patch2
+		wget http://openvas.org/download/wmi/openvas-$WMI.patch3
+		wget http://openvas.org/download/wmi/openvas-$WMI.patch3v2
+		wget http://openvas.org/download/wmi/openvas-$WMI.patch4
+		wget http://openvas.org/download/wmi/openvas-$WMI.patch5
+	fi
+
+	patch -p1 -R < openvas-$WMI.patch
+	patch -p1 -R < openvas-$WMI.patch2
+	patch -p1 -R < openvas-$WMI.patch3
+	patch -p1 -R < openvas-$WMI.patch3v2
+	patch -p1 -R < openvas-$WMI.patch4
+	patch -p1 -R < openvas-$WMI.patch5
+
+	sed -i '/gnutls_transport_set_lowat/d' ./Samba/source/lib/tls/tls.c
+
+	cd Samba/source/
+	./autogen.sh && ./configure && make "CPP=gcc -E -ffreestanding" proto all
+	make libraries
+
+	cd $DIR
+}
+
+# prepare :
+# Download src and create dir build
+#
+# Usage : prepare <version_package> <package>
+function prepare() {
+	ID=$1
+	PK=$2
+
+	cd $DIR
+
+	if [ ! -f "$PK.tar.gz" ]; then
+		echo -e "\n* DOWNLOADING '$PK'"
+		wget http://wald.intevation.org/frs/download.php/$ID/$PK.tar.gz
+		echo -e "\n* Untaring '$PK.tar.gz'"
+		tar xzf $PK.tar.gz
+		echo -e "\n* Removing '$PK.tar.gz'"
+		rm $PK.tar.gz
+  	fi
+
+	echo -e "\n* PREBUILDING $PK"
+	cd $PK
+
+	if [ -d "build" ]; then
+		echo -e "\n\t* Removing old build/ of '$PK'"
+		rm -rf build
+	fi
+
+	mkdir build
+
+	cd ..
+}
+
+# install :
+# Installation from src
+#
+# Usage : install <version_package> <package>
 function install() {
+	ID=$1
+	PK=$2
+
+	cd $DIR/$PK/build
+
+	echo -e "\n* BUILDING $PK"
+	cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=/opt/openvas -DCMAKE_BUILD_TYPE=RELEASE ..
+	make
+	make doc
+	make install
+	make rebuild_cache
+
+	cd ../..
+}
+
+# template_install :
+# prepare() and install()
+#
+# Usage : template_install <version_package> <package>
+function template_install() {
 	ID=$1
 	PK=$2
 
@@ -63,100 +173,126 @@ function install() {
 	mkdir build && cd build
 
 	# Option -Wno-dev : Suppression des messages de debug pour les développeurs
-	cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=/opt/openvas ..
+	cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=/opt/openvas -DCMAKE_BUILD_TYPE=RELEASE ..
 	make
 	make doc
 	make install
 	make rebuild_cache
 
-	echo -e "\n* CLEANNING $PK"
-	cd .. && rm -rf build
+	cd ../..
 }
 
+###
 
 if [ ! -d "$DIR" ]; then
-	sudo 
-else
-	cd $DIR
+	mkdir $DIR
 fi
+cd $DIR
+
+###
 
 echo -e "\n* Installing needed packages :"
 sudo apt install -y \
-gcc wget make cmake build-essential autoconf pkg-config fakeroot alien nsis \
+gcc wget make cmake build-essential autoconf pkg-config fakeroot alien nsis rsync \
 bison flex uuid-dev mingw32 \
 libglib2.0-dev libgnutls28-dev libpcap-dev libgpgme11-dev libssh-dev libldap2-dev libmicrohttpd-dev libgcrypt20-dev libpopt-dev heimdal-multidev \
 redis-server libhiredis-dev sqlite3 libsqlite3-dev \
-libxml2-dev libxslt1-dev xsltproc doxygen xmltoman
+libxml2-dev libxslt1-dev xsltproc doxygen xmltoman texlive-latex-base
 
-echo -e "\n* Exporting PGK_CONFIG_PATH :"
-export PKG_CONFIG_PATH=/opt/openvas/lib/pkgconfig
-if [ ! -d "$PKG_CONFIG_PATH" ]; then
-	mkdir -p $PKG_CONFIG_PATH
-fi
+###
 
+install_wmi $WMI
+
+prepare $LIBID $LIBRARIES
+
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$DIR/$LIBRARIES/build
+
+prepare $SMBID $SMB
 install $SMBID $SMB
 
 install $LIBID $LIBRARIES
 
+prepare $SCANID $SCANNER
 install $SCANID $SCANNER
 
+prepare $MANID $MANAGER
 install $MANID $MANAGER
 
+prepare $GSAID $GSA
 install $GSAID $GSA
 
+prepare $CLID $CLI
 install $CLID $CLI
 
+###
 
-echo -e "\n* Adding openvas to the enviroment PATH"
-export PATH=/opt/openvas/bin:/opt/openvas/sbin:$PATH
-sudo sh -c "echo 'export PATH=/opt/openvas/bin:/opt/openvas/sbin:$PATH' >> /etc/bash.bashrc" 
+wget http://nmap.org/dist/nmap-5.51.6.tgz
+tar xvf nmap-5.51.6.tgz
+cd nmap-5.51.6
+./configure
+make
+make install
 
-sudo sh -c "echo '/opt/openvas/lib' > /etc/ld.so.conf.d/openvas"
-sudo sh -c "echo '/opt/openvas/lib' >> /etc/ld.so.conf"
+###
+
+echo '/opt/openvas/lib' > /etc/ld.so.conf.d/openvas
+echo '/opt/openvas/lib' >> /etc/ld.so.conf
 sudo ldconfig
 
-
-#configure
-
-echo -e "\n* CONFIGURE"
+echo -e "\n* Adding openvas to the enviroment PATH :"
+export PATH=/opt/openvas/bin:/opt/openvas/sbin:$PATH
+echo -e 'export PATH=/opt/openvas/bin:/opt/openvas/sbin:$PATH' >> ~/.bashrc
 
 echo -e "\n* Creating cert for server :"
-sudo /opt/openvas/sbin/openvas-mkcert
-
-echo -e "\n* Sync NVT :"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" /opt/openvas/sbin/openvas-nvt-sync
+openvas-mkcert
 
 echo -e "\n* Creating cert for client :"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" /opt/openvas/sbin/openvas-mkcert-client -n -i
+openvas-mkcert-client -n -i
 
-echo -e "\n* Starting the scanner"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" /opt/openvas/sbin/openvassd
+echo -e "\n* Sync NVT :"
+# Add option --wget if rsync is blocked by the FW
+openvas-nvt-sync
 
-echo -e "\n* Rebuilding OpenVASmd"
-sudo /opt/openvas/sbin/openvasmd --rebuild
+echo -e "\n* Doing the ScapData Sync :"
+openvas-scapdata-sync && sleep 1800
 
-echo -e "\n* Doing the ScapData Sync"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" /opt/openvas/sbin/openvas-scapdata-sync
+echo -e "\n* Doing the CertData Sync :"
+openvas-certdata-sync && sleep 120
 
-echo -e "\n* Doing the CertData sync"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" /opt/openvas/sbin/openvas-certdata-sync
+echo -e "\n* Starting the scanner :"
+openvassd
+
+echo -e "\n* Rebuilding OpenVASmd :"
+openvasmd --rebuild
 
 if [ ! -f "/opt/openvas/etc/openvas/pwpolicy.conf" ]; then
   echo -e "\n* Creating password policy file, read the doc and edit it as you need"
   sudo touch /opt/openvas/etc/openvas/pwpolicy.conf
 fi
 
-echo -e "\n* Starting openvas manager"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" /opt/openvas/sbin/openvasmd
+echo -e "\n* Starting openvas manager :"
+openvasmd
 
-echo -e "\n* Starting GreenBone security assistant"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" /opt/openvas/sbin/gsad
+cd /tmp
+wget http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
+openvas-portnames-update service-names-port-numbers.xml
+rm service-names-port-numbers.xml
+cd $DIR
 
-echo -e "\n* Create config file"
-sudo -b env  PATH="/opt/openvas/bin:/opt/openvas/sbin:$PATH" openvassd -s > /opt/openvas/etc/openvas/openvassd.conf
+echo -e "\n* Create admin user :"
+sopenvasmd --create-user=admin --role=Admin
+openvasmd --user=admin --new-password=admin
 
-echo -e "\n* Create your first user :"
-echo -e "\n* openvasmd --first-user=myuser"
+echo -e "\n* Starting GreenBone security assistant :"
+gsad
+
+echo -e "\n* Create config file :"
+openvassd -s > /opt/openvas/etc/openvas/openvassd.conf
 
 echo -e "\n* if any issues download and run :"
-echo -e "\n* wget --no-check-certificate https://svn.wald.intevation.org/svn/openvas/trunk/tools/openvas-check-setup"
+cd /tmp
+wget --no-check-certificate https://svn.wald.intevation.org/svn/openvas/trunk/tools/openvas-check-setup
+chmod u+x openvas-check-setup
+./openvas-check-setup
+
+exit 0
