@@ -5,6 +5,10 @@
 # Author  : benwend <benjamin.wend+git@gmail.com>
 # Date    : 15/03/2016
 # Version : 0.7
+# Usage	  : # ./install_openvas.sh
+# Summary :
+#  Script for install OpenVAS v8 on Debian 8.3 64bits.
+#  OpenVAS is installed in the directory /opt/openvas but you 
 #
 ################################################################################
 #
@@ -18,7 +22,7 @@
 #
 # 11/03/2016	benwend		Initial release (v0.1)
 # 12/03/2016	benwend		Create 'install' function && add page ID (v0.2)
-# 12/03/2016	benwend		Test if the directory '/opt/openvas' exists (v0.3)
+# 12/03/2016	benwend		Test if the directory '$DIR' exists (v0.3)
 # 12/03/2016	benwend		Fix bugs (v0.4)
 # 12/03/2016	benwend		DL CLI-1.4.2 : Bug sur Debian 8 avec 1.4.3
 # 13/03/2016	benwend		Init OpenVAS (v0.5)
@@ -55,7 +59,7 @@ NMAP="nmap-5.51.6" # Supported bu NMAP
 
 DIR="/opt/openvas"
 
-# Installation of NMAP
+# Installation of NMAP.
 #
 # Usage : install_nmap
 function install_nmap() {
@@ -76,7 +80,7 @@ function install_nmap() {
 	cd $DIR
 }
 
-# installation of lib WMI
+# installation of lib WMI.
 #
 # Usage : install_wmi
 function install_wmi() {
@@ -116,7 +120,7 @@ function install_wmi() {
 	cd $DIR
 }
 
-# Download src and create dir build
+# Download src and create dir build.
 #
 # Usage : prepare <version_package> <package>
 function prepare() {
@@ -142,7 +146,7 @@ function prepare() {
 	cd ..
 }
 
-# Installation from src
+# Installation from src.
 #
 # Usage : install <version_package> <package>
 function install() {
@@ -152,7 +156,7 @@ function install() {
 	cd $DIR/$PK/build
 
 	echo -e "\n* BUILDING $PK"
-	cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=/opt/openvas -DCMAKE_BUILD_TYPE=RELEASE ..
+	cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=$DIR -DCMAKE_BUILD_TYPE=RELEASE ..
 	make
 	make doc
 	make install
@@ -161,7 +165,7 @@ function install() {
 	cd ../..
 }
 
-# CLeaning src
+# CLeaning src.
 #
 # Usage : clean
 function clear() {
@@ -170,7 +174,9 @@ function clear() {
 	rm -rf $NMAP $WMI $LIBRARIES $SCANNER $MANAGER $GSA $ CLI
 }
 
-# Installation of needed packages
+# Installation of needed packages.
+# Remove the package texlive-latex-extra
+# if you don't extract your report in PDF format.
 #
 # Usage : install_packages
 function install_packages() {
@@ -179,21 +185,23 @@ function install_packages() {
 	gnupg bison flex uuid-dev mingw32 \
 	libglib2.0-dev libgnutls28-dev libpcap-dev libgpgme11-dev libssh-dev libldap2-dev libmicrohttpd-dev libgcrypt20-dev libpopt-dev heimdal-multidev \
 	redis-server libhiredis-dev sqlite3 libsqlite3-dev \
-	libxml2-dev libxslt1-dev xsltproc doxygen xmltoman texlive-latex-recommended
+	libxml2-dev libxslt1-dev xsltproc doxygen xmltoman texlive-latex-extra
 }
 
-# /!\ HELP /!\
-# If impossible to generate your gpg key,
-# install the package "haveged" !
+# /!\ IF impossible to generate your gpg key,
+# install the package "haveged". /!\
 #
 # Usage : install_gpg
 function install_gpg() {
 	cd /tmp
 	wget http://www.openvas.org/OpenVAS_TI.asc
-	gpg --homedir=/opt/openvas/etc/openvas/gnupg --gen-key
-	gpg --homedir=/opt/openvas/etc/openvas/gnupg --import OpenVAS_TI.asc
-	gpg --homedir=/opt/openvas/etc/openvas/gnupg --lsign-key 48DB4530
+	gpg --homedir=$DIR/etc/openvas/gnupg --gen-key
+	gpg --homedir=$DIR/etc/openvas/gnupg --import OpenVAS_TI.asc
+	gpg --homedir=$DIR/etc/openvas/gnupg --lsign-key 48DB4530
 	rm OpenVAS_TI.asc
+
+	sed -i "s|nasl_no_signature_check = no|nasl_no_signature_check = yes|" $DIR/etc/openvas/openvassd.conf
+
 	cd $DIR
 }
 
@@ -255,15 +263,15 @@ sed -i "s|# unixsocketperm 700|unixsocketperm 755|" /etc/redis/redis.conf
 systemctl restart redis-server
 
 # Fixbug with xsltproc
-sed -i '|from math import log10| a\\nSPLIT_PART_SIZE = 0' /opt/openvas/share/openvas/scap/xml_split
+sed -i '|from math import log10| a\\nSPLIT_PART_SIZE = 0' $DIR/share/openvas/scap/xml_split
 
 install_gpg()
 
 ###
 
 echo -e "\n* Adding openvas to the enviroment PATH"
-export PATH=/opt/openvas/bin:/opt/openvas/sbin:$PATH
-echo -e 'export PATH=/opt/openvas/bin:/opt/openvas/sbin:$PATH' >> ~/.bashrc
+export PATH=$DIR/bin:$DIR/sbin:$PATH
+echo -e "export PATH=$DIR/bin:$DIR/sbin:\$PATH" >> ~/.bashrc
 
 echo -e "\n* Creating cert for server"
 openvas-mkcert
@@ -286,8 +294,8 @@ openvassd
 echo -e "\n* Rebuilding OpenVASmd"
 openvasmd --rebuild --progress
 
-if [ ! -f "/opt/openvas/etc/openvas/pwpolicy.conf" ]; then
-  touch /opt/openvas/etc/openvas/pwpolicy.conf
+if [ ! -f "$DIR/etc/openvas/pwpolicy.conf" ]; then
+  touch $DIR/etc/openvas/pwpolicy.conf
 fi
 
 echo -e "\n* Starting openvas manager :"
@@ -307,7 +315,7 @@ echo -e "\n* Starting GreenBone security assistant :"
 gsad
 
 echo -e "\n* Create config file :"
-openvassd -s > /opt/openvas/etc/openvas/openvassd.conf
+openvassd -s > $DIR/etc/openvas/openvassd.conf
 
 echo -e "\n* if any issues download and run :"
 cd /tmp
