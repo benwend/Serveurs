@@ -8,7 +8,8 @@
 # Usage	  : # ./install_openvas.sh
 # Summary :
 #  Script for install OpenVAS v8 on Debian 8.3 64bits.
-#  OpenVAS is installed in the directory /opt/openvas but you 
+#  OpenVAS is installed by default in the directory /opt/openvas but you can change
+#  it through $DIR.
 #
 ################################################################################
 #
@@ -38,6 +39,7 @@
 # 15/03/2016	benwend		Add function clear
 # 15/03/2016	benwend		Push installation packages in a fct
 # 15/03/2016	benwend		Add Gnupg (v0.7)
+# 15/03/2016	benwend		Fix bugs
 #
 ################################################################################
 
@@ -86,8 +88,8 @@ function install_nmap() {
 function install_wmi() {
 	cd $DIR
 
-	if [ ! -f "$WMI" ]; then
-		if [ ! -f "$WMI.tar.bz2" ]; then
+	if [ ! -d "$WMI" ]; then
+		if [ ! -d "$WMI.tar.bz2" ]; then
 			wget http://openvas.org/download/wmi/$WMI.tar.bz2
 		fi
 		tar -xf $WMI.tar.bz2
@@ -129,8 +131,10 @@ function prepare() {
 
 	cd $DIR
 
-	if [ ! -f "$PK" ]; then
-		wget http://wald.intevation.org/frs/download.php/$ID/$PK.tar.gz
+	if [ ! -d "$PK" ]; then
+		if [ ! -d "$PK.tar.gz" ]; then
+			wget http://wald.intevation.org/frs/download.php/$ID/$PK.tar.gz
+		fi
 		tar xzf $PK.tar.gz
   	fi
 
@@ -182,25 +186,29 @@ function clear() {
 function install_packages() {
 	apt install -y \
 	gcc wget make cmake build-essential autoconf pkg-config fakeroot alien nsis rsync \
-	gnupg bison flex uuid-dev mingw32 \
+	haveged gnupg bison flex uuid-dev mingw32 \
 	libglib2.0-dev libgnutls28-dev libpcap-dev libgpgme11-dev libssh-dev libldap2-dev libmicrohttpd-dev libgcrypt20-dev libpopt-dev heimdal-multidev \
 	redis-server libhiredis-dev sqlite3 libsqlite3-dev \
 	libxml2-dev libxslt1-dev xsltproc doxygen xmltoman texlive-latex-extra
 }
 
-# /!\ IF impossible to generate your gpg key,
-# install the package "haveged". /!\
+
 #
 # Usage : install_gpg
 function install_gpg() {
 	cd /tmp
+
+	haveged -run 0
+
 	wget http://www.openvas.org/OpenVAS_TI.asc
 	gpg --homedir=$DIR/etc/openvas/gnupg --gen-key
 	gpg --homedir=$DIR/etc/openvas/gnupg --import OpenVAS_TI.asc
 	gpg --homedir=$DIR/etc/openvas/gnupg --lsign-key 48DB4530
 	rm OpenVAS_TI.asc
 
-	sed -i "s|nasl_no_signature_check = no|nasl_no_signature_check = yes|" $DIR/etc/openvas/openvassd.conf
+	pkill haveged
+
+	sed -i "s|nasl_no_signature_check = yes|nasl_no_signature_check = no|" $DIR/etc/openvas/openvassd.conf
 
 	cd $DIR
 }
@@ -263,15 +271,18 @@ sed -i "s|# unixsocketperm 700|unixsocketperm 755|" /etc/redis/redis.conf
 systemctl restart redis-server
 
 # Fixbug with xsltproc
-sed -i '|from math import log10| a\\nSPLIT_PART_SIZE = 0' $DIR/share/openvas/scap/xml_split
-
-install_gpg()
-
-###
+sed -i '/from math import log10/ a\\nSPLIT_PART_SIZE = 0' $DIR/share/openvas/scap/xml_split
 
 echo -e "\n* Adding openvas to the enviroment PATH"
 export PATH=$DIR/bin:$DIR/sbin:$PATH
-echo -e "export PATH=$DIR/bin:$DIR/sbin:\$PATH" >> ~/.bashrc
+echo -e "\nexport PATH=$DIR/bin:$DIR/sbin:\$PATH" >> ~/.bashrc
+
+echo -e "\n* Create config file :"
+openvassd -s > $DIR/etc/openvas/openvassd.conf
+
+install_gpg
+
+###
 
 echo -e "\n* Creating cert for server"
 openvas-mkcert
@@ -314,14 +325,12 @@ openvasmd --user=admin --new-password=admin
 echo -e "\n* Starting GreenBone security assistant :"
 gsad
 
-echo -e "\n* Create config file :"
-openvassd -s > $DIR/etc/openvas/openvassd.conf
-
 echo -e "\n* if any issues download and run :"
 cd /tmp
 wget --no-check-certificate https://svn.wald.intevation.org/svn/openvas/trunk/tools/openvas-check-setup
 chmod u+x openvas-check-setup
 ./openvas-check-setup
+cd $DIR
 
 ###
 
