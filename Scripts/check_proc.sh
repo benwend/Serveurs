@@ -28,9 +28,6 @@ echo "0" > /proc/sys/kernel/sysrq
 # Smurf Attack
 echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 
-# Source routing
-echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
-
 # Syn Flood
 echo "1" > /proc/sys/net/ipv4/tcp_syncookies
 echo "1024" > /proc/sys/net/ipv4/tcp_max_syn_backlog
