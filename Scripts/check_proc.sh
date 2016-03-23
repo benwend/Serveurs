@@ -7,72 +7,73 @@
 #
 # Syntaxe: # ./check_proc.sh
 #
-#VERSION="0.2"
+#VERSION=1.0
 
 ##############################
 
 #########
 ### KERNEL
 # kernel.core_uses_pid
-echo "1" > /proc/sys/kernel/core_uses_pid
+sysctl -w kernel.core_uses_pid=1
 
 # kernel.kptr_restrict
-echo "1" > /proc/sys/kernel/kptr_restrict
+sysctl -w kernel.kptr_restrict=1
 
 # kernel.sysrq
-echo "0" > /proc/sys/kernel/sysrq
+sysctl -w kernel.sysrq=0
 
 ##########
 ### NETWORK
 ## IPv4
 # Smurf Attack
-echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1
 
 # Syn Flood
-echo "1" > /proc/sys/net/ipv4/tcp_syncookies
-echo "1024" > /proc/sys/net/ipv4/tcp_max_syn_backlog
-echo "1" > /proc/sys/net/ipv4/conf/all/rp_filter
+sysctl -w net.ipv4.tcp_syncookies=1
+sysctl -w net.ipv4.tcp_max_syn_backlog=1024
+sysctl -w net.ipv4.conf.all.rp_filter=1
 
 # Redirects
-echo "0" > /proc/sys/net/ipv4/conf/default/accept_redirects
-echo "0" > /proc/sys/net/ipv4/conf/default/secure_redirects
+sysctl -w net.ipv4.conf.default.accept_redirects=0
+sysctl -w net.ipv4.conf.default.secure_redirects=0
 
-echo "0" > /proc/sys/net/ipv4/conf/all/accept_redirects
-echo "0" > /proc/sys/net/ipv4/conf/all/secure_redirects
+sysctl -w net.ipv4.conf.all.accept_redirects=0
+sysctl -w net.ipv4.conf.all.secure_redirects=0
 
 # Bad error messages
-echo "1" > /proc/sys/net/ipv4/icmp_ignore_bogus_error_responses
+sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1
 
 # Log Martians
-echo "1" > /proc/sys/net/ipv4/conf/default/log_martians
-echo "1" > /proc/sys/net/ipv4/conf/all/log_martians
+sysctl -w net.ipv4.conf.default.log_martians=1
+sysctl -w net.ipv4.conf.all.log_martians=1
 
 # RP Filter
-echo "1" > /proc/sys/net/ipv4/conf/default/rp_filter
-echo "1" > /proc/sys/net/ipv4/conf/all/rp_filter
+sysctl -w net.ipv4.conf.default.rp_filter=1
+sysctl -w net.ipv4.conf.all.rp_filter=1
 
 # Source Route
-echo "0" > /proc/sys/net/ipv4/conf/default/accept_source_route
-echo "0" > /proc/sys/net/ipv4/conf/all/accept_source_route
+sysctl -w net.ipv4.conf.default.accept_source_route=0
+sysctl -w net.ipv4.conf.all.accept_source_route=0
 
 # Time stamps
-echo "0" > /proc/sys/net/ipv4/tcp_timestamps
+sysctl -w net.ipv4.tcp_timestamps=0
 
 # Send redirects
-echo "0" | tee /proc/sys/net/ipv4/conf/*/send_redirects
+sysctl -w net.ipv4.conf.default.send_redirects=0
+sysctl -w net.ipv4.conf.all.send_redirects=0
 
 #IP Forwarding
-echo "0" > /proc/sys/net/ipv4/conf/all/forwarding
+sysctl -w net.ipv4.conf.all.forwarding=0
 
 
 ## IPv6
 # Redirects
-echo "0" > /proc/sys/net/ipv6/conf/default/accept_redirects
-echo "0" > /proc/sys/net/ipv6/conf/all/accept_redirects
+sysctl -w net.ipv6.conf.default.accept_redirects=0
+sysctl -w net.ipv6.conf.all.accept_redirects=0
 
 # Source Route
-echo "0" > /proc/sys/net/ipv6/conf/default/accept_source_route
-echo "0" > /proc/sys/net/ipv6/conf/all/accept_source_route
+sysctl -w net.ipv6.conf.default.accept_source_route=0
+sysctl -w net.ipv6.conf.all.accept_source_route=0
 
 # IP Forwarding
-echo "0" > /proc/sys/net/ipv6/conf/all/forwarding
+sysctl -w net.ipv6.conf.all.forwarding=0
