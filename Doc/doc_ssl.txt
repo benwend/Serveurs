@@ -40,6 +40,7 @@
 
 ####
 # Let's Encrypt
+#  (Aide : https://github.com/letsencrypt/letsencrypt)
 #
 1) Installation :
 	$ git clone https://github.com/letsencrypt/letsencrypt
@@ -51,6 +52,12 @@
 	$ ./letsencrypt-auto --help
 	Complet :
 	$ ./letsencrypt-auto --help all
+
+3) Configurer Let's Encrypt
+	...
+
+4) Création d'un nouveau certificat :
+	...
 
 
 ####
