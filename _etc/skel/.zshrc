@@ -69,12 +69,24 @@ alias psf='ps faux'
 alias df='df -h'
 alias du='du -h'
 # DIVERS
-alias sag='ssh-agent /bin/zsh'
-alias sad='ssh-add <PATH/MY_KEY>'
 alias ipy='ipython'
 alias g11='gcc -std=c11 -Wall'
 # CORRECTION
 alias xs='cd'
 alias sl='ls'
+# SSH
+alias sag='ssh-agent /bin/zsh'
+#alias sad='ssh-add <PATH/MY_KEY>'
 ###
 
+####
+# PLUGINS : Oh-my-Zsh
+#
+
+# HISTORY
+alias h='history'
+function hs
+{
+    history | grep $*
+}
+alias hsi='hs -i'
