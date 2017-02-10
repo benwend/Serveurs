@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+################################################################################
+#
+# Author  : benwend <ben_wend@hotmail.fr>
+# Date    : 10/02/2017
+# Version : 0.1
+# Usage	  : # ./dock_create.sh
+# Summary :
+#  Sample script for install a docker container.
+#
+################################################################################
 
 NAME=""
 DOCKER=""
