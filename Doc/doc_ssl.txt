@@ -5,15 +5,33 @@
 ######
 #
 # Auteur  : benwend <ben_wend@hotmail.fr>
-# Date    : 09/03/2016
-# Version : 0.2
+# Date    : 30/04/2017
+# Version : 0.3
 #
-# Résumé : Quelques consignes basiques sur l'installation d'un certificat SSL/TLS
-#          sur un serveur Apache.
+# Résumé : Quelques consignes basiques sur l'exploitation d'OpenSSL et
+#	   l'installation d'un certificat SSL/TLS sur un serveur Apache.
 #
 # Roadmap : - Let's encrypt sur Apache
 #
 ######
+
+####
+## Générer une clé RSA
+##
+# Génération d'une clé privée :
+$ openssl genrsa 1024 > rsa_priv.pem
+$ openssl rsa -noout -text -in rsa_priv.pem
+
+# Chiffrement d'une clé privée :
+$ openssl rsa -aes128 -in rsa_priv.pem > rsa_priv.pem
+
+# Ou directement -> génération + chiffrement :
+$ openssl genrsa -aes128 1024 > rsa_priv.pem
+
+# Génération de la clé public :
+$ openssl rsa -in gitsrv.key -pubout > gitsrv.pub
+$ openssl rsa -noout -text -pubin -in rsa_pub.pem
+
 
 ####
 # Certificat SSL/TLS via un mandataire
