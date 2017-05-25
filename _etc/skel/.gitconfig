@@ -3,6 +3,15 @@
 	diff = auto
 	status = auto
 	branch = auto
+	interactive = auto
 [user]
 	name = xxx
 	email = xxx@xxx
+[core]
+	editor = vim
+[alias]
+        ci = commit
+        co = checkout
+        st = status
+[push]
+        default = matching
