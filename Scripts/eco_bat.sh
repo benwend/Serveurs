@@ -1,15 +1,4 @@
-#!/bin/bash
-#
-################################################################################
-#
-# Author  : benwend <ben_wend@hotmail.fr>
-# Date    : 10/02/2017
-# Version : 0.1
-# Usage	  : # ./eco_bat.sh <parameter>
-# Summary :
-#  Sample script for eco battery
-#
-################################################################################
+#!/bin/zsh
 
 function eco {
 	systemctl stop cups.path

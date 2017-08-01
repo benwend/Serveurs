@@ -1,24 +1,13 @@
 #!/bin/bash
-#
-################################################################################
-#
-# Author  : benwend <ben_wend@hotmail.fr>
-# Date    : 10/02/2017
-# Version : 0.1
-# Usage	  : # ./dock_create.sh
-# Summary :
-#  Sample script for install a docker container.
-#
-################################################################################
 
-NAME=""
-DOCKER=""
-LOCAL=""
-DIST=""
-PGID=
-PUID=
-PORTL=
-PORTD=
+NAME="linuxserver/piwigo"
+DOCKER="piwigo"
+LOCAL="/srv/data/piwigo"
+DIST="/config"
+PGID=1000
+PUID=1000
+PORTL=443
+PORTD=443
 
 docker create \
 --name=$DOCKER \
