@@ -28,6 +28,12 @@ $ sudo time dd of=~/backup_key.dd if=/dev/sdc1 bs=4096 conv=notrunc,noerror
 $ youtube-dl "http://mon_url"
 $ youtube-dl -t -x --audio-format mp3 --audio-quality 0 "http://mon_url"
 $ youtube-dl -t -f mp4 "http://mon_url"
+#
+# Convertir ses fichiers :
+#    https://blog.seboss666.info/2014/04/convertir-ses-flac-en-mp3-sous-linux/
+#
+# Découper/Recoller des morceaux sans perte :
+#   https://blog.seboss666.info/2017/07/decouper-un-fichier-audiovideo-sans-le-recompresserreencoder/
 
 
 ######
