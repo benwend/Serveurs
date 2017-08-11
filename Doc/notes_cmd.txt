@@ -74,3 +74,18 @@ $ encfs --reverse /home/$USER/coffre_open/ /home/$USER/.coffre/
 
 # Mettre à jour les droits :
 > FLUSH PRIVILEGES
+
+######
+## Archivage/Compression
+##
+# Tar + Gzip/Bzip
+$ tar czf file.tar.gz file
+ou
+$ tar cjf file.tar.bzip2 file
+
+# PIGZ
+$ tar cf - file | pigz --best > file.tgz
+ou
+$ tar cf file.tar file
+$ pigz --best <-k> file.tar
+
