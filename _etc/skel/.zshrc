@@ -32,27 +32,37 @@ zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) #([0-9]#)*=36=31"
 # Correction des commandes
 setopt correctall
 
+# Liste des plugins
+# Git
+source $HOME/.git-flow-completion/git-flow-completion.zsh
+
 ### VAR ENV
+# Prompt ROOT :
+# export PS1="#%B%{$fg[red]%}%m%b%{$reset_color%}:%~%B#%b "
 # Prompt USER :
 autoload colors; colors
 export PS1="%B[%{$fg[green]%}%n%{$reset_color%}%b%B%{@$fg[cyan]%}%m%b%{$reset_color%}:%~%B]%b "
-# Prompt ROOT :
-# export PS1="#%B%{$fg[red]%}%m%b%{$reset_color%}:%~%B#%b "
 # Colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 # Colored MAN
 export MANPAGER='/usr/bin/most -s'
 # Editeur de texte
 export EDITOR=/usr/bin/vim
+# Display TIME
+export TIME="\t%E,\t%k"
 # Historique des commandes:
 HISTFILE=~/.history
 #HISTFILE=~/.zsh_history
 HISTSIZE=1000
 SAVEHIST=1000
 export HISTFILE SAVEHIST
+export PATH="/sbin:/usr/sbin:"$PATH
 ###
 
 ### ALIAS
+# DD
+alias dd='dcfldd'
+alias ddkey='sudo time dcfldd of=/srv/data/backup_key.dd if=/dev/sdc1 bs=4096 conv=notrunc,noerror'
 # LS
 alias ls='ls --color=auto'
 alias l='ls -CF'
@@ -69,6 +79,8 @@ alias psf='ps faux'
 alias df='df -h'
 alias du='du -h'
 # DIVERS
+alias upPy='pip list --outdated|cut -d " " -f 1|sudo xargs -n1 pip install -U'
+alias upPy3='pip3 list --outdated|cut -d " " -f 1|sudo xargs -n1 pip3 install -U'
 alias ipy='ipython'
 alias g11='gcc -std=c11 -Wall'
 # CORRECTION
@@ -76,7 +88,15 @@ alias xs='cd'
 alias sl='ls'
 # SSH
 alias sag='ssh-agent /bin/zsh'
-#alias sad='ssh-add <PATH/MY_KEY>'
+alias sal='ssh-add -l'
+alias sad-g='ssh-add /media/veracrypt1/Documents/Trousseau/github.key'
+alias sad-o='ssh-add /media/veracrypt1/Documents/Trousseau/ob_rsa'
+alias sad-r='ssh-add /media/veracrypt1/Documents/Trousseau/ovhr'
+alias sad-a='ssh-add /media/veracrypt1/Documents/Trousseau/Adexgroup-Securite/id_rsa_wolverine'
+# RSYNC
+alias tsync='time rsync -ahvz --del --progress'
+alias rsync_key='tsync /srv/data/backup_key.dd /media/sharky/Rafale/backup_key.dd'
+alias rsync_zic='tsync /srv/data/Musiques/ /media/sharky/Rafale/Musiques/'
 ###
 
 ####
