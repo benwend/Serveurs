@@ -5,4 +5,4 @@ Scripts d'installation personnels ou forkés pour être adaptés à mes propres 
 
 Author
 ------
-	Benjamin Wendling -- ben_wend@hotmail.fr
+	Benwend
