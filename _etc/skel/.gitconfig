@@ -1,17 +1,37 @@
-[color]
-	ui = true
-	diff = auto
-	status = auto
-	branch = auto
-	interactive = auto
+#
+# https://www.atlassian.com/fr/git/tutorials/setting-up-a-repository/git-config
+# https://www.atlassian.com/fr/git/tutorials/using-branches/merge-conflicts
+# https://willi.am/blog/2015/02/19/customize-your-git-log-format/
+#
 [user]
-	name = xxx
-	email = xxx@xxx
+	email = benjamin.wend@free.fr
+	name = benwend
 [core]
 	editor = vim
+	whitespace = trailing-space,space-before-tab,tabwidth=4
+[merge]
+	tool = kdiff3
 [alias]
-        ci = commit
-        co = checkout
-        st = status
-[push]
-        default = matching
+	br = branch
+	ci = commit
+	co = checkout
+	st = status
+	logg = log --graph --pretty=format:'%C(auto)%h %d%Creset - %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+[apply]
+	whitespace = fix
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = auto
+[format]
+	#pretty = format:%C(auto)%h %d%Creset %s%n%Cgreen%ad%Creset %aN <%aE>%n
+[fetch]
+	prune = true
+[diff]
+	colorMoved = zebra
+[branch]
+	autosetuprebase = always
+[pull]
+	rebase = preserve

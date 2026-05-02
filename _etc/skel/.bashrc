@@ -26,7 +26,6 @@ shopt -s checkwinsize
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
-
 shopt -s cdspell
 shopt -s nocaseglob
 
@@ -40,7 +39,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -60,7 +59,7 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] : \[\033[01;34m\]\w\[\033[00m\] \$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -78,14 +77,28 @@ esac
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
+    export COLOR_OPTION='--color=auto'
+
+    man() {
+        LESS_TERMCAP_mb=$'\e[1;33m' \
+        LESS_TERMCAP_md=$'\e[1;31m' \
+        LESS_TERMCAP_me=$'\e[0m' \
+        LESS_TERMCAP_us=$'\e[01;32m' \
+        LESS_TERMCAP_ue=$'\e[0m' \
+        LESS_TERMCAP_so=$'\e[45;93m' \
+        LESS_TERMCAP_se=$'\e[0m' \
+        command man "$@"
+    }
+
 fi
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -100,3 +113,15 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+##
+# https://linux-attitude.fr/post/Lire-les-logs-en-couleur
+##
+lesscolor() {
+    \ccze -A < "$1" | \less -R;
+}
+
+tailcolor() {
+    tail -f "$1" | \ccze -A;
+}
+
