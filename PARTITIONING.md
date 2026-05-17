@@ -6,6 +6,8 @@
 - https://blog.stephane-robert.info/docs/admin-serveurs/linux/references-complementaires/btrfs/#pour-quels-usages
 - https://docs.ogb4n.fr/fr/guides/debian-lvm-luks/
 - https://wiki.debian.org/LVM
+- https://www.shpv.fr/blog/partitionnement-disque-linux-2026/
+- https://www.shpv.fr/blog/montage-filesystems-linux-2026/
 
 ## PC
 
