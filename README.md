@@ -34,3 +34,6 @@ Sources
         - https://support.mozilla.org/fr/kb/sauvegarder-restaurer-informations-profils-firefox
         - https://doc.ubuntu-fr.org/firefox
         - https://doc.ubuntu-fr.org/firefox#gestion_des_profils
+    - Fstab :
+        -  https://fr.linuxadictos.com/Guide-complet-du-fichier-fstab-sous-Linux%C2%A0%3A-champs--options-et-exemples.html
+        -  https://wiki.debian.org/SSDOptimization
